@@ -1,42 +1,122 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Jogabilidade — WoW</title>
-  <link rel="stylesheet" href="public/css/landing-page.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jogabilidade — Azeroth</title>
+  <link rel="stylesheet" href="public/css/site.css">
 </head>
-  <body>
-    <section class="inicio" id="inicio">
-      <div class="header">
-        <img src="public/assets/logo.png" alt="logo">
-        <a href="index.html"><p class="p-white">INÍCIO</p></a>
-        <a href="historia.html"><p class="p-white">HISTÓRIA</p></a>
-        <a href="jogabilidade.html"><p class="p-white">JOGABILIDADE</p></a>
-        <a href="publicacoes.html"><p class="p-white">PUBLICAÇÕES</p></a>
-        <div class="posicao-button">
-          <button class="button-header">ENTRAR</button>
-          <button class="button-header">REGISTRAR</button>
-        </div>
+<body>
+  <header>
+    <nav class="wrap">
+      <a class="logo" href="index.html"><img width = 100px src="public\assets\logo.png"></a>
+      <div class="links">
+        <a href="index.html">Explorar</a>
+        <a href="jornada.html">Minha jornada</a>
+        <a href="historia.html">Historia</a>
+        <a href="jogabilidade.html">Jogabilidade</a>
+        <a href="comunidade.html">Comunidade</a>
+      </div>
+      <div class="actions">
+        <button onclick="openModal(false)">Entrar</button>
+        <button class="primary" onclick="openModal(true)">Criar conta</button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="wrap">
+        <article>
+          <div class="eyebrow">Mecânicas de jogo</div>
+          <h1>Jogabilidade de <span>Azeroth</span></h1>
+          <p>Guias práticos sobre papéis, atividades em grupo e dicas para diferentes estilos de jogo.</p>
+        </article>
       </div>
     </section>
 
-  <main>
-    <section class="container card">
-      <h3>Jogabilidade</h3>
-      <p>Discussões sobre mecânicas de jogo: papéis, atividades em grupo, dicas e guias práticos para diferentes estilos de jogo.</p>
-      <div class="grid">
-        <div>
-          <h4>Papéis</h4>
-          <p>Tanque, curador e DPS — responsabilidades e exemplos.</p>
+    <section>
+      <div class="wrap">
+        <div class="grid">
+          <div class="card">
+            <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=700&q=80" alt="Tanque">
+            <div class="pad">
+              <div class="tag">Papel</div>
+              <h3>Tanque</h3>
+              <p class="muted">Responsável por atrair a atenção dos inimigos e proteger o grupo.</p>
+            </div>
+          </div>
+          <div class="card">
+            <img src="https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=700&q=80" alt="Curador">
+            <div class="pad">
+              <div class="tag">Papel</div>
+              <h3>Curador</h3>
+              <p class="muted">Mantém os aliados vivos com curas e remoção de efeitos negativos.</p>
+            </div>
+          </div>
+          <div class="card">
+            <img src="https://images.unsplash.com/photo-1518709594023-6eab9bab7b23?auto=format&fit=crop&w=700&q=80" alt="DPS">
+            <div class="pad">
+              <div class="tag">Papel</div>
+              <h3>DPS</h3>
+              <p class="muted">Foca em causar dano rápido para eliminar alvos antes que causem estragos.</p>
+            </div>
+          </div>
         </div>
-        <div>
-          <h4>Atividades</h4>
-          <p>Masmorras, raides, PvP e exploração do mundo.</p>
+
+        <div class="intro" style="margin-top:40px;">
+          <div class="eyebrow">Atividades</div>
+          <h2>O que fazer em Azeroth</h2>
+          <p class="muted">Explore masmorras, participe de raides, teste suas habilidades em PvP e descubra cada canto do mundo.</p>
         </div>
       </div>
     </section>
   </main>
 
+  <footer>
+    <div class="wrap foot">
+      <span>AZEROTH — Jogabilidade de World of Warcraft</span>
+      <span>Projeto acadêmico independente. Não afiliado à Blizzard Entertainment.</span>
+    </div>
+  </footer>
+
+  <div class="modal" id="modal">
+    <div class="box">
+      <button class="close" onclick="closeModal()">×</button>
+      <h2 id="modalTitle">Entrar</h2>
+      <form onsubmit="demoSubmit(event)">
+        <label>Nome de usuário</label>
+        <input required placeholder="Seu usuário">
+        <div id="emailField" hidden>
+          <label>E-mail</label>
+          <input type="email" placeholder="seu@email.com">
+        </div>
+        <label>Senha</label>
+        <input type="password" required placeholder="Sua senha">
+        <button class="primary" id="submitText">Entrar</button>
+      </form>
+      <p class="note">Demonstração visual: não realiza autenticação nem salva dados.</p>
+    </div>
+  </div>
+
+  <script>
+    function openModal(reg) {
+      document.getElementById('modal').classList.add('show');
+      document.getElementById('modalTitle').textContent = reg ? 'Criar conta' : 'Entrar';
+      document.getElementById('emailField').hidden = !reg;
+      document.getElementById('submitText').textContent = reg ? 'Cadastrar' : 'Entrar';
+    }
+    function closeModal() {
+      document.getElementById('modal').classList.remove('show');
+    }
+    function demoSubmit(e) {
+      e.preventDefault();
+      alert('Demonstração visual: autenticação não conectada.');
+      closeModal();
+    }
+    document.getElementById('modal').addEventListener('click', e => {
+      if (e.target.id === 'modal') closeModal();
+    });
+  </script>
 </body>
 </html>

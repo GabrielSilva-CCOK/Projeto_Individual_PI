@@ -1,37 +1,131 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>História — WoW</title>
-  <link rel="stylesheet" href="public/css/landing-page.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>História — Azeroth</title>
+  <link rel="stylesheet" href="public/css/site.css">
 </head>
 <body>
-    <section class="inicio" id="inicio">
-      <div class="header">
-        <img src="public/assets/logo.png" alt="logo">
-        <a href="index.html"><p class="p-white">INÍCIO</p></a>
-        <a href="historia.html"><p class="p-white">HISTÓRIA</p></a>
-        <a href="jogabilidade.html"><p class="p-white">JOGABILIDADE</p></a>
-        <a href="publicacoes.html"><p class="p-white">PUBLICAÇÕES</p></a>
-        <div class="posicao-button">
-          <button class="button-header">ENTRAR</button>
-          <button class="button-header">REGISTRAR</button>
-        </div>
+  <header>
+    <nav class="wrap">
+      <a class="logo" href="index.html"><img width = 100px src="public\assets\logo.png"></a>
+      <div class="links">
+        <a href="index.html">Explorar</a>
+        <a href="jornada.html">Minha jornada</a>
+        <a href="historia.html">Historia</a>
+        <a href="jogabilidade.html">Jogabilidade</a>
+        <a href="comunidade.html">Comunidade</a>
+      </div>
+      <div class="actions">
+        <button onclick="openModal(false)">Entrar</button>
+        <button class="primary" onclick="openModal(true)">Criar conta</button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="wrap">
+        <article>
+          <div class="eyebrow">História e universo</div>
+          <h1>A história de <span>Azeroth</span></h1>
+          <p>Conheça os acontecimentos, conflitos e personagens que moldaram o mundo de Warcraft.</p>
+        </article>
       </div>
     </section>
 
-  <main>
-    <section class="container card">
-      <h3>História e Universo</h3>
-      <p>Conteúdo dedicado à história de Azeroth, facções, personagens e eventos importantes. Edite este texto para incluir narrativas detalhadas e referências.</p>
-      <h4>Temas sugeridos</h4>
-      <ul>
-        <li>A origem de Azeroth</li>
-        <li>Horda vs Aliança — complexidade dos conflitos</li>
-        <li>Expansões e marcos históricos</li>
-      </ul>
+    <section>
+      <div class="wrap">
+        <div class="grid">
+          <div class="card">
+            <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=700&q=80" alt="A origem">
+            <div class="pad">
+              <div class="tag">Origem</div>
+              <h3>A criação de Azeroth</h3>
+              <p class="muted">Os titãs moldaram o mundo, mas a corrupção trouxe a primeira grande ameaça à existência.</p>
+            </div>
+          </div>
+          <div class="card">
+            <img src="https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=700&q=80" alt="Conflito">
+            <div class="pad">
+              <div class="tag">Conflito</div>
+              <h3>Horda vs Aliança</h3>
+              <p class="muted">Dois lados de um mesmo conflito, com motivações profundas e cinzas entre heróis e vilões.</p>
+            </div>
+          </div>
+          <div class="card">
+            <img src="https://images.unsplash.com/photo-1518709594023-6eab9bab7b23?auto=format&fit=crop&w=700&q=80" alt="Expansões">
+            <div class="pad">
+              <div class="tag">Expansões</div>
+              <h3>Marcos históricos</h3>
+              <p class="muted">Cada expansão trouxe novas terras, raças, classes e ameaças cósmicas ao universo.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline" style="margin-top:40px;">
+          <div class="event">
+            <strong>Era dos Titãs</strong>
+            <p class="muted">Azeroth é moldada e os Aspectos dos Dragões são nomeados guardiões.</p>
+          </div>
+          <div class="event">
+            <strong>A Guerra dos Anciais</strong>
+            <p class="muted">O primeiro grande conflito entre os elfos noturnos e a Legião Ardente.</p>
+          </div>
+          <div class="event">
+            <strong>O Cataclisma</strong>
+            <p class="muted">A morte de Asamal terrassa remodela os continentes de Azeroth.</p>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
+
+  <footer>
+    <div class="wrap foot">
+      <span>AZEROTH — História de World of Warcraft</span>
+      <span>Projeto acadêmico independente. Não afiliado à Blizzard Entertainment.</span>
+    </div>
+  </footer>
+
+  <div class="modal" id="modal">
+    <div class="box">
+      <button class="close" onclick="closeModal()">×</button>
+      <h2 id="modalTitle">Entrar</h2>
+      <form onsubmit="demoSubmit(event)">
+        <label>Nome de usuário</label>
+        <input required placeholder="Seu usuário">
+        <div id="emailField" hidden>
+          <label>E-mail</label>
+          <input type="email" placeholder="seu@email.com">
+        </div>
+        <label>Senha</label>
+        <input type="password" required placeholder="Sua senha">
+        <button class="primary" id="submitText">Entrar</button>
+      </form>
+      <p class="note">Demonstração visual: não realiza autenticação nem salva dados.</p>
+    </div>
+  </div>
+
+  <script>
+    function openModal(reg) {
+      document.getElementById('modal').classList.add('show');
+      document.getElementById('modalTitle').textContent = reg ? 'Criar conta' : 'Entrar';
+      document.getElementById('emailField').hidden = !reg;
+      document.getElementById('submitText').textContent = reg ? 'Cadastrar' : 'Entrar';
+    }
+    function closeModal() {
+      document.getElementById('modal').classList.remove('show');
+    }
+    function demoSubmit(e) {
+      e.preventDefault();
+      alert('Demonstração visual: autenticação não conectada.');
+      closeModal();
+    }
+    document.getElementById('modal').addEventListener('click', e => {
+      if (e.target.id === 'modal') closeModal();
+    });
+  </script>
 </body>
 </html>

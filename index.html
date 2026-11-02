@@ -1,41 +1,193 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>WoW — Site Pessoal (Protótipo)</title>
-  <link rel="stylesheet" href="public/css/landing-page.css">
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tiles of Azeroth</title>
+  <link rel="stylesheet" href="public/css/site.css">
 </head>
 <body>
-  <section class="inicio" id="inicio">
-    <div class="header">
-      <img src="public/assets/logo.png" alt="logo">
-      <a href="index.html"><p class="p-white">INÍCIO</p></a>
-      <a href="historia.html"><p class="p-white">HISTÓRIA</p></a>
-      <a href="jogabilidade.html"><p class="p-white">JOGABILIDADE</p></a>
-      <a href="publicacoes.html"><p class="p-white">PUBLICAÇÕES</p></a>
-      <div class="posicao-button">
-        <button class="button-header">ENTRAR</button>
-        <button class="button-header">REGISTRAR</button>
+  <header>
+    <nav class="wrap">
+      <a class="logo" href="#inicio"><img width = 100px src="public\assets\logo.png"></a>
+      <div class="links">
+        <a href="index.html">Explorar</a>
+        <a href="jornada.html">Minha jornada</a>
+        <a href="historia.html">Historia</a>
+        <a href="jogabilidade.html">Jogabilidade</a>
+        <a href="comunidade.html">Comunidade</a>
       </div>
-    </div>
+      <div class="actions">
+        <button onclick="window.location.href='login.html'">Entrar</button>
+        <button class="primary" onclick="window.location.href='cadastro.html'">Criar conta</button>
+      </div>
+    </nav>
+  </header>
 
   <main>
-    <div class="hero-wrapper">
-      <img class="hero-image" src="public/assets/hero.jpg" alt="Hero image: substitua pela sua">
-      <div class="hero-content">
-        <h2>Introdução</h2>
-        <p>Este é o site pessoal dedicado a World of Warcraft. Aqui você encontrará textos sobre a história de Azeroth, guias de jogabilidade e publicações do autor.</p>
-        <p>World of Warcraft é um universo vasto, repleto de história, personagens icônicos e conflitos entre facções. Desde sua estreia, o jogo ampliou sua mitologia através de expansões que introduziram novas terras, raças, classes e ameaças cósmicas.</p>
-        <p>O site tem foco pessoal e informativo: relatar experiências, registrar memórias e oferecer guias práticos sobre mecânicas como masmorras, raides e papéis em grupo — sem simplificar a complexidade narrativa entre Horda e Aliança.</p>
-        <div style="margin-top:16px">
-          <a class="big-link" href="historia.html">História &amp; Universo</a>
-          <a class="big-link" href="jogabilidade.html">Jogabilidade</a>
-          <a class="big-link" href="publicacoes.html">Publicações</a>
+    <section class="hero" id="inicio">
+      <div class="wrap">
+        <article>
+          <div class="eyebrow">Um mundo de histórias e aventuras</div>
+          <h1>Descubra as histórias de <span>Azeroth</span></h1>
+          <p>Um espaço dedicado a World of Warcraft: sua história, seus personagens, suas aventuras e as conexões criadas ao longo dessa jornada.</p>
+          <a class="btn primary" href="#explorar">Começar a explorar</a>
+        </article>
+      </div>
+    </section>
+
+    <section id="explorar">
+      <div class="wrap">
+        <div class="intro">
+          <div class="eyebrow">Explore o universo</div>
+          <h2>Um mundo para conhecer</h2>
+          <p class="muted">Conheça os elementos que tornam Azeroth um universo tão marcante.</p>
+        </div>
+        <div class="grid">
+          <a href="historia.html" class="card-link">
+            <div class="card">
+              <img src="public\assets\card1.jpg" alt="Azeroth">
+              <div class="pad">
+                <div class="tag">História</div>
+                <h3>O mundo de Azeroth</h3>
+                <p class="muted">Acontecimentos, conflitos e personagens que moldaram Warcraft.</p>
+              </div>
+            </div>
+          </a>
+          <a href="jogabilidade.html" class="card-link">
+            <div class="card">
+              <img src="public\assets\card2.jpg" alt="Aventura">
+              <div class="pad">
+                <div class="tag">Aventura</div>
+                <h3>Explore sem limites</h3>
+                <p class="muted">Missões, masmorras, raides e descobertas pelo mundo.</p>
+              </div>
+            </div>
+          </a>
+          <a href="jornada.html" class="card-link">
+            <div class="card">
+              <img src="public\assets\card3.jpg" alt="Experiência">
+              <div class="pad">
+                <div class="tag">Experiência</div>
+                <h3>Mais que um jogo</h3>
+                <p class="muted">Guildas, amizades e trabalho em equipe criam memórias.</p>
+              </div>
+            </div>
+          </a>
         </div>
       </div>
-    </div>
+    </section>
+
+    <section class="journey" id="jornada">
+      <div class="wrap two">
+        <div>
+          <div class="eyebrow">Minha jornada</div>
+          <h2 style="font-size:40px">Uma aventura que começou em 2020</h2>
+          <p class="muted">World of Warcraft faz parte da minha história. O jogo proporcionou experiências, amizades e conexões com pessoas de diferentes lugares do mundo.</p>
+          <div class="timeline">
+            <div class="event">
+              <strong>2020 — O começo</strong>
+              <p class="muted">Primeiros passos e descobertas em Azeroth.</p>
+            </div>
+            <div class="event">
+              <strong>Novas aventuras</strong>
+              <p class="muted">Experiências em grupo, desafios e histórias compartilhadas.</p>
+            </div>
+            <div class="event">
+              <strong>Até hoje</strong>
+              <p class="muted">Um universo que continua presente e conectando pessoas.</p>
+            </div>
+          </div>
+        </div>
+        <div class="art"></div>
+      </div>
+    </section>
+
+    <section id="faccoes">
+      <div class="wrap">
+        <div class="intro">
+          <div class="eyebrow">Conflitos e alianças</div>
+          <h2>Horda &amp; Aliança</h2>
+          <p class="muted">As duas grandes facções possuem histórias, culturas e motivações próprias. Em Azeroth, os conflitos raramente são apenas uma questão de bem contra o mal.</p>
+        </div>
+        <div class="factions">
+          <div class="faction horde">
+            <img src="public\assets\horda.jpg" alt="Horda" class="faction-img">
+            <div class="pad">
+              <div class="tag">Pela Horda</div>
+              <h3>Horda</h3>
+              <p class="muted">Diferentes povos e culturas unidos por histórias de sobrevivência, honra, conflitos internos e busca por um lugar no mundo.</p>
+            </div>
+          </div>
+          <div class="faction alliance">
+            <img src="public\assets\alianca.png" alt="Aliança" class="faction-img">
+            <div class="pad">
+              <div class="tag">Pela Aliança</div>
+              <h3>Aliança</h3>
+              <p class="muted">Uma união de reinos e povos que compartilham objetivos, mas também enfrentam divergências e decisões difíceis.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="comunidade">
+      <div class="wrap">
+        <div class="intro">
+          <div class="eyebrow">Compartilhe experiências</div>
+          <h2>Comunidade</h2>
+          <p class="muted">Um espaço demonstrativo para compartilhar opiniões, lembranças e experiências sobre o jogo.</p>
+        </div>
+        <div class="feed">
+          <div>
+            <article class="post">
+              <small>Jogador • Explorador | Publicação demonstrativa</small>
+              <h3>Qual região de Azeroth mais marcou sua jornada?</h3>
+              <p class="muted">Cada região tem sua atmosfera, trilha sonora e histórias. Algumas ficam na memória por muito tempo.</p>
+              <button onclick="like(this)">♡ Curtir <span>0</span></button>
+            </article>
+            <article class="post">
+              <small>Jogador • Aventureiro | Publicação demonstrativa</small>
+              <h3>A melhor parte de jogar em grupo</h3>
+              <p class="muted">Além dos desafios, são as pessoas que tornam as aventuras especiais.</p>
+              <button onclick="like(this)">♡ Curtir <span>0</span></button>
+            </article>
+          </div>
+          <aside class="side">
+            <div class="tag">Participe</div>
+            <h3>Tem uma história para contar?</h3>
+            <p class="muted">No projeto completo, usuários poderão compartilhar publicações e interagir com a comunidade.</p>
+            <button class="primary" onclick="window.location.href='cadastro.html'">Criar conta</button>
+            <p class="note">As publicações são exemplos visuais e não são salvas.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <div class="eyebrow">Sua próxima aventura começa aqui</div>
+        <h2>Faça parte dessa jornada</h2>
+        <p class="muted">Explore, relembre e compartilhe suas experiências em World of Warcraft.</p>
+        <button class="primary" onclick="window.location.href='cadastro.html'">Conhecer o projeto</button>
+      </div>
+    </section>
   </main>
+
+  <footer>
+    <div class="wrap foot">
+      <span>AZEROTH — Um espaço sobre World of Warcraft</span>
+      <span>Projeto acadêmico independente. Não afiliado à Blizzard Entertainment.</span>
+    </div>
+  </footer>
+
+
+  <script>
+    function like(b) {
+      let s = b.querySelector('span');
+      s.textContent = +s.textContent + 1;
+      b.firstChild.textContent = '♥ Curtido ';
+    }
+  </script>
 </body>
 </html>
