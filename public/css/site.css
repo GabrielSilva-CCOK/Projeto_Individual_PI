@@ -410,3 +410,56 @@ footer {
     padding: 55px 0;
   }
 }
+
+/* Password strength and show-password UI (for cadastro/login forms) */
+.campo-senha {
+  position: relative;
+  width: 100%;
+}
+.campo-senha input {
+  padding-right: 90px;
+}
+.botao-olho {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 5px 12px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  color: inherit;
+  background: rgba(214,179,106,0.12);
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.botao-olho:hover {
+  background: rgba(214,179,106,0.2);
+}
+
+.forca-barra {
+  width: 100%;
+  height: 8px;
+  margin-top: 10px;
+  background: #0f1417;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.03);
+}
+.forca-preenchimento {
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  box-shadow: 0 0 10px currentColor;
+  transition: width 0.35s ease, background 0.35s ease;
+}
+.forca-texto {
+  width: 100%;
+  min-height: 18px;
+  margin: 6px 0 4px 2px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--muted);
+}

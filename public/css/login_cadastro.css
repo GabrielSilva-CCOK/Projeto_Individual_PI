@@ -288,3 +288,6 @@ label {
         font-size: 28px;
     }
 }
+
+/* Observação: estilos de componentes de senha também foram adicionados ao arquivo public/css/site.css
+   para integração com o cadastro principal (manter identidade visual do site). */

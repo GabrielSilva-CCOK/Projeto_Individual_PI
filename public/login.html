@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entrar — Azeroth</title>
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+  <header>
+    <nav class="wrap">
+      <a class="logo" href="index.html"><img width = 100px src="public\assets\logo.png"></a>
+      <div class="links">
+        <a href="index.html">Explorar</a>
+        <a href="jornada.html">Minha jornada</a>
+        <a href="historia.html">Historia</a>
+        <a href="jogabilidade.html">Jogabilidade</a>
+        <a href="comunidade.html">Comunidade</a>
+      </div>
+      <div class="actions">
+        <button class="primary" onclick="location.href='cadastro.html'">Criar conta</button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section style="padding:75px 0;">
+      <div class="wrap">
+        <div class="box" style="max-width:420px; margin:auto;">
+          <h2 style="font-size:32px; margin-bottom:20px;">Entrar</h2>
+          <form>
+            <label>Email</label>
+            <input id="ipt_email" required placeholder="abcdef123@gmail.com">
+            <label>Senha</label>
+            <div class="campo-senha">
+              <input id="ipt_senha" type="password" class="input" required placeholder="Sua senha">
+              <button type="button" class="botao-olho" onclick="alternarSenha('ipt_senha', this)">Mostrar</button>
+            </div>
+            <button type="button" onclick="entrar()" class="primary" style="width:100%;">Entrar</button>
+          </form>
+          <p class="note" style="margin-top:12px; text-align:center;">
+            Ainda não tem conta? <a href="cadastro.html" style="color:var(--gold);">Cadastre-se</a>
+          </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <span>Tales of Azeroth — Entrar</span>
+      <span>Projeto acadêmico independente. Não afiliado à Blizzard Entertainment.</span>
+    </div>
+  </footer>
+  <script>
+    const iptEmail = document.getElementById('ipt_email');
+    const iptSenha = document.getElementById('ipt_senha');
+
+    function alternarSenha(idCampo, botao) {
+      let campo = null;
+      if (typeof idCampo === 'string') campo = document.getElementById(idCampo);
+      if (!campo && botao) {
+        if (botao.previousElementSibling && botao.previousElementSibling.tagName === 'INPUT') {
+          campo = botao.previousElementSibling;
+        } else if (botao.parentElement) {
+          campo = botao.parentElement.querySelector('input[type="password"]') || botao.parentElement.querySelector('input');
+        }
+      }
+      if (!campo) campo = document.querySelector('input[type="password"]') || document.querySelector('input');
+      if (!campo) return;
+
+      if (campo.type === 'password') {
+        campo.type = 'text';
+        if (botao) botao.textContent = 'Ocultar';
+      } else {
+        campo.type = 'password';
+        if (botao) botao.textContent = 'Mostrar';
+      }
+    }
+
+    function entrar() {
+      const emailVar = (iptEmail && iptEmail.value) ? iptEmail.value.trim() : '';
+      const senhaVar = (iptSenha && iptSenha.value) ? iptSenha.value : '';
+
+      if (!emailVar || !senhaVar) {
+        alert('Preencha todos os campos.');
+        return false;
+      }
+
+      console.log('FORM LOGIN: ', emailVar);
+      console.log('FORM SENHA: ', senhaVar);
+
+      fetch('/usuarios/autenticar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ emailServer: emailVar, senhaServer: senhaVar })
+      })
+      .then(function (resposta) {
+        console.log('ESTOU NO THEN DO entrar()!');
+
+        if (resposta.ok) {
+          resposta.json().then(json => {
+            console.log(json);
+            sessionStorage.EMAIL_USUARIO = json.email;
+            sessionStorage.NOME_USUARIO = json.nome;
+            sessionStorage.ID_USUARIO = json.id;
+            sessionStorage.AQUARIOS = JSON.stringify(json.aquarios || []);
+            window.location = 'dashboard.html';
+          });
+        } else {
+          console.log('Houve um erro ao tentar realizar o login!');
+          resposta.text().then(texto => {
+            console.error(texto);
+            alert(texto || 'Erro ao realizar login.');
+          });
+        }
+      }).catch(function (erro) {
+        console.error('Erro no fetch /usuarios/autenticar:', erro);
+        alert('Erro ao conectar com o servidor.');
+      });
+
+      return false;
+    }
+  </script>
+</body>
+</html>

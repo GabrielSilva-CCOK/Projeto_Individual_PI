@@ -1,0 +1,189 @@
+
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Criar conta — Azeroth</title>
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+  <header>
+    <nav class="wrap">
+      <a class="logo" href="index.html"><img width = 100px src="assets\logo.png"></a>
+      <div class="links">
+        <a href="index.html">Explorar</a>
+        <a href="jornada.html">Minha jornada</a>
+        <a href="historia.html">Historia</a>
+        <a href="jogabilidade.html">Jogabilidade</a>
+        <a href="comunidade.html">Comunidade</a>
+      </div>
+      <div class="actions">
+        <button class="primary" onclick="location.href='login.html'">Entrar</button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section style="padding:75px 0;">
+      <div class="wrap">
+        <div class="box" style="max-width:420px; margin:auto;">
+          <h2 style="font-size:32px; margin-bottom:20px;">Criar conta</h2>
+          <form onsubmit="event.preventDefault();">
+            <label>Nome de usuário</label>
+            <input id="ipt_nome" class="input" required placeholder="Seu usuário">
+
+            <label>E-mail</label>
+            <input id="ipt_email" type="email" class="input" required placeholder="seu@email.com">
+
+            <label>Senha</label>
+            <div class="campo-senha">
+              <input id="ipt_senha" type="password" class="input" required placeholder="Sua senha" oninput="verificarForca()">
+              <button type="button" class="botao-olho" onclick="alternarSenha('ipt_senha', this)">Mostrar</button>
+            </div>
+
+            <div class="forca-barra">
+              <div class="forca-preenchimento" id="forca_barra"></div>
+            </div>
+            <p class="forca-texto" id="forca_texto"></p>
+            <button type="button" onclick="cadastrar()" class="primary" style="width:100%;">Cadastrar</button>
+          </form>
+          <p class="note" style="margin-top:12px; text-align:center;">
+            Já tem conta? <a href="login.html" style="color:var(--gold);">Faça login</a>
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <span>Tales of Azeroth — Criar conta</span>
+      <span>Projeto acadêmico independente. Não afiliado à Blizzard Entertainment.</span>
+    </div>
+  </footer>
+
+  <script>
+    function alternarSenha(idCampo, botao) {
+      const campo = document.getElementById(idCampo);
+      if (!campo) return;
+      if (campo.type === 'password') {
+        campo.type = 'text';
+        if (botao) botao.textContent = 'Ocultar';
+      } else {
+        campo.type = 'password';
+        if (botao) botao.textContent = 'Mostrar';
+      }
+    }
+
+    function avaliarSenha(senha) {
+      senha = senha || '';
+      let pontos = 0;
+      let faltando = [];
+
+      if (senha.length >= 8) { pontos++; } else { faltando.push('8 caracteres'); }
+      if (/[a-z]/.test(senha) && /[A-Z]/.test(senha)) { pontos++; } else { faltando.push('maiúscula e minúscula'); }
+      if (/[0-9]/.test(senha)) { pontos++; } else { faltando.push('número'); }
+      if (/[^A-Za-z0-9]/.test(senha)) { pontos++; } else { faltando.push('símbolo (ex: @ # !)'); }
+
+      let nivel;
+      if (senha.length < 6 || pontos <= 1) {
+        nivel = 'fraca';
+      } else if (pontos <= 3) {
+        nivel = 'média';
+      } else {
+        nivel = 'forte';
+      }
+
+      return { nivel: nivel, faltando: faltando };
+    }
+
+    function verificarForca() {
+      const senhaEl = document.getElementById('ipt_senha');
+      const barra = document.getElementById('forca_barra');
+      const texto = document.getElementById('forca_texto');
+      if (!senhaEl || !barra || !texto) return;
+
+      const senha = senhaEl.value;
+      if (!senha) {
+        barra.style.width = '0';
+        texto.textContent = '';
+        return;
+      }
+
+      const resultado = avaliarSenha(senha);
+
+      if (resultado.nivel === 'fraca') {
+        barra.style.width = '33%';
+        barra.style.background = '#e53935';
+      } else if (resultado.nivel === 'média') {
+        barra.style.width = '66%';
+        barra.style.background = '#fbc02d';
+      } else {
+        barra.style.width = '100%';
+        barra.style.background = '#07B875';
+      }
+
+      texto.textContent = 'Senha ' + resultado.nivel;
+      if (resultado.faltando.length > 0) {
+        texto.textContent += ' — falta: ' + resultado.faltando.join(', ');
+      }
+    }
+
+    function cadastrar() {
+      const nomeVar = document.getElementById('ipt_nome')?.value || '';
+      const emailVar = document.getElementById('ipt_email')?.value || '';
+      const senhaVar = document.getElementById('ipt_senha')?.value || '';
+      if (!nomeVar || !emailVar || !senhaVar ) {
+        if (typeof cardErro !== 'undefined' && typeof mensagem_erro !== 'undefined') {
+          cardErro.style.display = 'block';
+          mensagem_erro.innerHTML = '(Mensagem de erro para todos os campos em branco)';
+        } else {
+          alert('Preencha todos os campos.');
+        }
+        return false;} 
+
+      if (!emailVar.includes('@') || !emailVar.includes('.')) {
+        alert('Digite um e-mail válido.');
+        return false;
+      }
+
+      if (avaliarSenha(senhaVar).nivel === 'fraca') {
+        alert('Sua senha está fraca. Use pelo menos 8 caracteres, com letras maiúsculas e minúsculas, número e símbolo.');
+        return false;
+      }
+
+      fetch('/usuarios/cadastrar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nomeServer: nomeVar,
+          emailServer: emailVar,
+          senhaServer: senhaVar,
+        })
+      })
+      .then(function (resposta) {
+        console.log('resposta: ', resposta);
+
+        if (resposta.ok) {
+          if (typeof cardErro !== 'undefined' && typeof mensagem_erro !== 'undefined') {
+            cardErro.style.display = 'block';
+            alert('Cadastro realizado com sucesso! Redirecionando para tela de Login...');
+          }
+
+          setTimeout(() => { window.location = 'login.html'; }, 2000);
+
+        }
+      })
+      .catch(function (resposta) {
+        console.log('#ERRO: ' + resposta);
+        finalizarAguardar?.();
+      });
+
+      return false;
+    }
+
+  </script>
+</body>
+</html>
+
