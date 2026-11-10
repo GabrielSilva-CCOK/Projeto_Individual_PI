@@ -1,1 +1,118 @@
-Entrou!!
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tales of Azeroth | Dashboard da Comunidade</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <header>
+    <div class="shell topline">
+      <div class="brand">
+        <div class="crest">⚔</div>
+        <div>
+          <div class="eyebrow">Tales of Azeroth · Arquivos da comunidade</div>
+          <h1>Crônicas de Azeroth</h1>
+          <p class="subtitle">Um panorama dos aventureiros que habitam este mundo.</p>
+        </div>
+      </div>
+      <div class="status">Painel demonstrativo · Dados fictícios</div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <div class="section-head">
+      <div><h2>Visão geral da comunidade</h2><p>Indicadores construídos a partir das respostas ao questionário dos jogadores.</p></div>
+      <span class="sample">Temporada da comunidade · 2026</span>
+    </div>
+
+    <section class="kpis">
+      <article class="kpi"><div class="kpi-label">Respostas registradas</div><div class="kpi-value">1.284</div><div class="kpi-note">Jogadores participantes</div></article>
+      <article class="kpi"><div class="kpi-label">Facção predominante</div><div class="kpi-value">Horda</div><div class="kpi-note">52% das respostas</div></article>
+      <article class="kpi"><div class="kpi-label">Classe mais popular</div><div class="kpi-value">Caçador</div><div class="kpi-note">Preferida pela comunidade</div></article>
+      <article class="kpi"><div class="kpi-label">Tempo médio de jornada</div><div class="kpi-value">6,4 anos</div><div class="kpi-note">Experiência dos participantes</div></article>
+    </section>
+
+    <div class="section-head"><div><h2>Identidade dos aventureiros</h2><p>Facções, classes e funções escolhidas pelos jogadores.</p></div></div>
+    <section class="grid">
+      <article class="card span-4">
+        <div class="card-head"><div><h3>Facção favorita</h3><p class="desc">Aliança ou Horda?</p></div><span class="tag">Questão 01</span></div>
+        <div class="chart-wrap"><canvas id="factionChart"></canvas></div>
+      </article>
+      <article class="card span-4">
+        <div class="card-head"><div><h3>Classe favorita</h3><p class="desc">As classes mais escolhidas.</p></div><span class="tag">Questão 02</span></div>
+        <div class="chart-wrap"><canvas id="classChart"></canvas></div>
+      </article>
+      <article class="card span-4">
+        <div class="card-head"><div><h3>Role favorita</h3><p class="desc">Função preferida em grupo.</p></div><span class="tag">Questão 03</span></div>
+        <div class="chart-wrap"><canvas id="roleChart"></canvas></div>
+      </article>
+
+      <article class="card span-6">
+        <div class="card-head"><div><h3>Frequência de jogo</h3><p class="desc">Com que frequência a comunidade entra em Azeroth.</p></div><span class="tag">Questão 04</span></div>
+        <div class="chart-wrap short"><canvas id="frequencyChart"></canvas></div>
+      </article>
+      <article class="card span-6">
+        <div class="card-head"><div><h3>Conteúdo PvE favorito</h3><p class="desc">Onde os jogadores preferem se aventurar.</p></div><span class="tag">Questão 05</span></div>
+        <div class="chart-wrap short"><canvas id="pveChart"></canvas></div>
+      </article>
+
+      <article class="card span-4">
+        <div class="card-head"><div><h3>Personagens por jogador</h3><p class="desc">Quantidade de personagens cadastrados pelos participantes.</p></div><span class="tag">Questão 06</span></div>
+        <div class="chart-wrap short"><canvas id="charactersChart"></canvas></div>
+      </article>
+      <article class="card span-4">
+        <div class="card-head"><div><h3>Anos jogando WoW</h3><p class="desc">Tempo de experiência dos aventureiros.</p></div><span class="tag">Questão 07</span></div>
+        <div class="chart-wrap short"><canvas id="yearsChart"></canvas></div>
+      </article>
+      <article class="card span-4">
+        <div class="card-head"><div><h3>Classic x Retail</h3><p class="desc">Versão preferida pela comunidade.</p></div><span class="tag">Questão 08</span></div>
+        <div class="chart-wrap short"><canvas id="versionChart"></canvas></div>
+      </article>
+    </section>
+    <p class="footnote">* Os números e percentuais desta página são ilustrativos, criados apenas para demonstrar a apresentação visual. Substitua os conjuntos de dados no JavaScript pelos resultados reais do banco de dados quando a integração estiver disponível.</p>
+    <footer class="footer"><span>TALES OF AZEROTH · REGISTROS DA COMUNIDADE</span><span>Que suas jornadas sejam lendárias.</span></footer>
+  </main>
+
+  <script>
+    Chart.defaults.color = '#aeb7bf';
+    Chart.defaults.font.family = 'Inter, sans-serif';
+    Chart.defaults.font.size = 11;
+    Chart.defaults.plugins.legend.labels.usePointStyle = true;
+    Chart.defaults.plugins.legend.labels.boxWidth = 8;
+    Chart.defaults.plugins.legend.labels.padding = 16;
+
+    const gold = '#d6ad62', blue = '#4e8cc8', red = '#b85b52';
+    const green = '#6c9d79', purple = '#8d78b9', slate = '#87939e';
+    const gridColor = 'rgba(183,193,201,.10)';
+    const baseOptions = {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom' }, tooltip: { backgroundColor: '#10161d', borderColor: 'rgba(214,173,98,.35)', borderWidth: 1, titleColor: '#f0d18c', bodyColor: '#e8e3d8', padding: 11 } }
+    };
+    function doughnut(id, labels, data, colors) {
+      new Chart(document.getElementById(id), { type:'doughnut', data:{ labels, datasets:[{data, backgroundColor:colors, borderColor:'#171e26', borderWidth:3, hoverOffset:7}] },
+        options:{...baseOptions, cutout:'65%'} });
+    }
+    function bars(id, labels, data, color, horizontal=false) {
+      new Chart(document.getElementById(id), { type:'bar', data:{ labels, datasets:[{data, backgroundColor:color, borderRadius:4, maxBarThickness:30}] },
+        options:{...baseOptions, indexAxis: horizontal?'y':'x', plugins:{...baseOptions.plugins, legend:{display:false}},
+          scales:{ x:{grid:{display:!horizontal, color:gridColor}, ticks:{color:'#aeb7bf'}, border:{display:false}},
+                   y:{grid:{display:horizontal, color:gridColor}, ticks:{color:'#aeb7bf'}, border:{display:false}, beginAtZero:true} } } });
+    }
+
+    doughnut('factionChart',['Horda','Aliança'],[52,48],[red,blue]);
+    bars('classChart',['Caçador','Paladino','Mago','Guerreiro','Druida','Bruxo','Outras'],[23,18,16,14,12,9,8],gold,true);
+    doughnut('roleChart',['DPS','Tank','Healer'],[61,22,17],[red,blue,green]);
+    bars('frequencyChart',['Todos os dias','Algumas vezes/semana','Fins de semana','Raramente'],[38,34,20,8],blue);
+    bars('pveChart',['Masmorras','Raides','Missões e história','Delves / Exploração'],[35,31,22,12],green);
+    bars('charactersChart',['1–3','4–6','7–10','Mais de 10'],[28,36,23,13],purple);
+    bars('yearsChart',['Menos de 1','1–3 anos','4–6 anos','7–10 anos','Mais de 10'],[12,21,25,27,15],gold);
+    doughnut('versionChart',['Retail','Classic','Ambos'],[58,27,15],[gold,blue,slate]);
+  </script>
+</body>
+</html>
