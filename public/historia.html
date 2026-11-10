@@ -9,17 +9,17 @@
 <body>
   <header>
     <nav class="wrap">
-      <a class="logo" href="index.html"><img width = 100px src="public\assets\logo.png"></a>
+      <a class="logo" href="#inicio"><img width = 100px src="assets\logo.png"></a>
       <div class="links">
-        <a href="index.html">Explorar</a>
+        <a href="index.html">Pagina Inicial</a>
         <a href="jornada.html">Minha jornada</a>
         <a href="historia.html">Historia</a>
         <a href="jogabilidade.html">Jogabilidade</a>
         <a href="comunidade.html">Comunidade</a>
       </div>
       <div class="actions">
-        <button onclick="openModal(false)">Entrar</button>
-        <button class="primary" onclick="openModal(true)">Criar conta</button>
+        <button onclick="window.location.href='login.html'">Entrar</button>
+        <button class="primary" onclick="window.location.href='cadastro.html'">Criar conta</button>
       </div>
     </nav>
   </header>
@@ -37,76 +37,148 @@
 
     <section>
       <div class="wrap">
-        <div class="grid">
+        <div class="intro">
+          <h2>Orcs e Humanos — origem do conflito</h2>
+          <p class="muted">Os orcs originaram-se em Draenor, não em Azeroth. A corrupção pela magia fel e a manipulação da Legião Ardente transformaram muitos clãs. Feiticeiros como Gul'dan prometeram poder e abriram o Portal Negro, permitindo que os orcs chegassem a Azeroth e iniciassem as Guerras contra os reinos humanos.</p>
+        </div>
+
+        <article>
+          <p class="muted">O primeiro contato direto aconteceu com a abertura do Portal Negro: clãs orcs atravessaram o portal e, motivados por poder e manipulação, atacaram assentamentos humanos. A Primeira Guerra trouxe saques e a queda de importantes fortificações. Na sequência, a Segunda Guerra contou com uma Horda mais organizada comandada por senhores da guerra como Blackhand; a resistência humana, liderada por figuras como Anduin Lothar, impediu a dominação total.</p>
+          <p class="muted">As motivações dos orcs foram majoritariamente manipuladas: o fel concedeu poder imediato, mas destruiu coesão e moral. Já os humanos lutaram para defender suas casas e tradições. O choque cultural e a destruição mútua deixaram cicatrizes profundas em ambas as sociedades.</p>
+        </article>
+
+        <div class="grid" style="margin-top:22px;">
           <div class="card">
-            <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=700&q=80" alt="A origem">
+            <img src="assets/portal.jpg" alt="Chegada dos Orcs">
             <div class="pad">
-              <div class="tag">Origem</div>
-              <h3>A criação de Azeroth</h3>
-              <p class="muted">Os titãs moldaram o mundo, mas a corrupção trouxe a primeira grande ameaça à existência.</p>
+              <div class="tag">Chegada</div>
+              <h3>Quando e como vieram</h3>
+              <p class="muted">Atravessando o Portal Negro, aberto por rituais em Draenor, os orcs chegaram em ondas durante a Primeira e Segunda Guerras. A invasão foi resultado direto da corrupção por fel e das ambições de líderes orcs que buscavam poder.</p>
             </div>
           </div>
+
           <div class="card">
-            <img src="https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=700&q=80" alt="Conflito">
+            <img src="assets/resistencia.avif" alt="Resistência humana">
             <div class="pad">
               <div class="tag">Conflito</div>
-              <h3>Horda vs Aliança</h3>
-              <p class="muted">Dois lados de um mesmo conflito, com motivações profundas e cinzas entre heróis e vilões.</p>
+              <h3>Por que lutaram</h3>
+              <p class="muted">Os orcs, pressionados por promessas de poder, buscavam expansão; os humanos defendiam suas terras. Manipulação, medo e mal-entendidos intensificaram a violência, produzindo heróis e vilões de ambos os lados.</p>
             </div>
           </div>
+
           <div class="card">
-            <img src="https://images.unsplash.com/photo-1518709594023-6eab9bab7b23?auto=format&fit=crop&w=700&q=80" alt="Expansões">
+            <img src="assets/legiao.avif" alt="Gul'dan">
             <div class="pad">
-              <div class="tag">Expansões</div>
-              <h3>Marcos históricos</h3>
-              <p class="muted">Cada expansão trouxe novas terras, raças, classes e ameaças cósmicas ao universo.</p>
+              <div class="tag">Corrupção</div>
+              <h3>Gul'dan e a magia fel</h3>
+              <p class="muted">Gul'dan encarnou a tentação do fel: seus pactos e rituais abriram portas que levaram os orcs a invadir outro mundo. A dependência do fel fragmentou a Horda e gerou consequências que se estenderiam por eras.</p>
             </div>
           </div>
         </div>
 
-        <div class="timeline" style="margin-top:40px;">
+        <div class="timeline" style="margin-top:30px;">
           <div class="event">
-            <strong>Era dos Titãs</strong>
-            <p class="muted">Azeroth é moldada e os Aspectos dos Dragões são nomeados guardiões.</p>
+            <strong>Primeira Guerra</strong>
+            <p class="muted">Abertura do Portal Negro; invasão inicial e perda de território humano.</p>
           </div>
           <div class="event">
-            <strong>A Guerra dos Anciais</strong>
-            <p class="muted">O primeiro grande conflito entre os elfos noturnos e a Legião Ardente.</p>
+            <strong>Segunda Guerra</strong>
+            <p class="muted">Horda reorganizada com novos líderes; confronto em larga escala e eventual derrota temporária dos orcs.</p>
           </div>
           <div class="event">
-            <strong>O Cataclisma</strong>
-            <p class="muted">A morte de Asamal terrassa remodela os continentes de Azeroth.</p>
+            <strong>Consequências</strong>
+            <p class="muted">Expulsão/exílio de muitos orcs, realinhamentos políticos e o começo de narrativas de redenção.</p>
           </div>
         </div>
       </div>
     </section>
+
+    <section class="journey">
+      <div class="wrap two">
+        <div>
+          <h2 class="eyebrow">Lendas e heróis</h2>
+          <p class="muted">Azeroth é povoada por personagens complexos: heróis que sacrificaram tudo, líderes que cometeram erros trágicos e figuras que transitam entre a redenção e a ruína. Essas histórias pessoais dão rosto às grandes batalhas.</p>
+
+          <div class="grid" style="margin-top:18px; grid-template-columns: repeat(2, 1fr);">
+            <div class="card">
+              <img src="assets/anduin.png" alt="Arthas">
+              <div class="pad">
+                <div class="tag">Ascenção</div>
+                <h3>Anduin Wrynn</h3>
+                <p class="muted"> Após o sacrifício heróico de seu pai contra a Legião Ardente na expansão Legion, Anduin tornou-se o Alto Rei da Aliança.</p>
+              </div>
+            </div>
+            <div class="card">
+              <img src="assets/thrall.jfif" alt="Thrall">
+              <div class="pad">
+                <div class="tag">Liderança</div>
+                <h3>Thrall</h3>
+                <p class="muted">Ex-escravo e xamã, transformou a Horda e buscou um caminho de honra e estabilidade para seu povo.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="art" style="background-image: linear-gradient(#0004,#0008), url('assets/card1.jpg');"></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2 class="intro">Regiões icônicas</h2>
+        <p class="muted">Das planícies de Elwynn às geladas terras de Nortúndria e às florestas ancestrais de Ashenvale — cada zona possui identidade própria, ecologia e ganchos narrativos.</p>
+
+        <div class="grid" style="margin-top:20px;">
+          <div class="card">
+            <img src="assets/card1.jpg" alt="Zona 1">
+            <div class="pad">
+              <h3>Elwynn / Reinos do Leste</h3>
+              <p class="muted">Berço de muitas histórias humanas e do retorno de heróis.</p>
+            </div>
+          </div>
+          <div class="card">
+            <img src="assets/card2.jpg" alt="Zona 2">
+            <div class="pad">
+              <h3>Nortúndria</h3>
+              <p class="muted">Glacial e implacável; cenário da queda do Lich King.</p>
+            </div>
+          </div>
+          <div class="card">
+            <img src="assets/card3.jpg" alt="Zona 3">
+            <div class="pad">
+              <h3>Ilhas e expansões</h3>
+              <p class="muted">Novos territórios que expandem os horizontes da narrativa do jogo.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2 class="intro">Facções e conflitos</h2>
+        <div class="factions" style="margin-top:18px;">
+          <div class="faction horde">
+            <h3>Horda</h3>
+            <p class="muted">Composta por orcs, trolls, taurens e outros — a Horda valoriza força, honra e sobrevivência cultural.</p>
+            <img class="faction-img" src="assets/horda.jpg" alt="Horda">
+          </div>
+          <div class="faction alliance">
+            <h3>Aliança</h3>
+            <p class="muted">Humana, anã e élfica — a Aliança defende ordem, justiça e tradições estabelecidas.</p>
+            <img class="faction-img" src="assets/alianca.png" alt="Aliança">
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <footer>
     <div class="wrap foot">
-      <span>AZEROTH — História de World of Warcraft</span>
+      <span>Tales of azeroth — Um espaço sobre World of Warcraft</span>
       <span>Projeto acadêmico independente. Não afiliado à Blizzard Entertainment.</span>
     </div>
   </footer>
-
-  <div class="modal" id="modal">
-    <div class="box">
-      <button class="close" onclick="closeModal()">×</button>
-      <h2 id="modalTitle">Entrar</h2>
-      <form onsubmit="demoSubmit(event)">
-        <label>Nome de usuário</label>
-        <input required placeholder="Seu usuário">
-        <div id="emailField" hidden>
-          <label>E-mail</label>
-          <input type="email" placeholder="seu@email.com">
-        </div>
-        <label>Senha</label>
-        <input type="password" required placeholder="Sua senha">
-        <button class="primary" id="submitText">Entrar</button>
-      </form>
-      <p class="note">Demonstração visual: não realiza autenticação nem salva dados.</p>
-    </div>
-  </div>
 
   <script>
     function openModal(reg) {
@@ -127,5 +199,24 @@
       if (e.target.id === 'modal') closeModal();
     });
   </script>
+  <!-- Modal (login / cadastro) -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="box" role="dialog" aria-modal="true">
+      <button class="close" onclick="closeModal()">&times;</button>
+      <h3 id="modalTitle">Entrar</h3>
+      <form onsubmit="demoSubmit(event)">
+        <input id="emailField" type="email" placeholder="Email" hidden>
+        <input id="userField" type="text" placeholder="Usuário" required>
+        <div class="campo-senha">
+          <input id="passField" type="password" placeholder="Senha" required>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button type="submit" class="primary" id="submitText">Entrar</button>
+          <button type="button" onclick="closeModal()">Cancelar</button>
+        </div>
+        <p class="note" style="margin-top:12px;">Demonstração: autenticação não conectada.</p>
+      </form>
+    </div>
+  </div>
 </body>
 </html>

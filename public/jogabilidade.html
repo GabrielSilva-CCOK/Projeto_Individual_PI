@@ -9,17 +9,17 @@
 <body>
   <header>
     <nav class="wrap">
-      <a class="logo" href="index.html"><img width = 100px src="assets\logo.png"></a>
+      <a class="logo" href="#inicio"><img width = 100px src="assets\logo.png"></a>
       <div class="links">
-        <a href="index.html">Explorar</a>
+        <a href="index.html">Pagina Inicial</a>
         <a href="jornada.html">Minha jornada</a>
         <a href="historia.html">Historia</a>
         <a href="jogabilidade.html">Jogabilidade</a>
         <a href="comunidade.html">Comunidade</a>
       </div>
       <div class="actions">
-        <button onclick="openModal(false)">Entrar</button>
-        <button class="primary" onclick="openModal(true)">Criar conta</button>
+        <button onclick="window.location.href='login.html'">Entrar</button>
+        <button class="primary" onclick="window.location.href='cadastro.html'">Criar conta</button>
       </div>
     </nav>
   </header>
@@ -39,7 +39,7 @@
       <div class="wrap">
         <div class="grid">
           <div class="card">
-            <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=700&q=80" alt="Tanque">
+            <img src="assets/tank.jpg" alt="Tanque">
             <div class="pad">
               <div class="tag">Papel</div>
               <h3>Tanque</h3>
@@ -47,7 +47,7 @@
             </div>
           </div>
           <div class="card">
-            <img src="https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=700&q=80" alt="Curador">
+            <img src="assets/healer.jpg" alt="Curador">
             <div class="pad">
               <div class="tag">Papel</div>
               <h3>Curador</h3>
@@ -55,7 +55,7 @@
             </div>
           </div>
           <div class="card">
-            <img src="https://images.unsplash.com/photo-1518709594023-6eab9bab7b23?auto=format&fit=crop&w=700&q=80" alt="DPS">
+            <img src="assets/dps.jpg" alt="DPS">
             <div class="pad">
               <div class="tag">Papel</div>
               <h3>DPS</h3>
@@ -75,29 +75,10 @@
 
   <footer>
     <div class="wrap foot">
-      <span>AZEROTH — Jogabilidade de World of Warcraft</span>
+      <span>Tales of azeroth — Um espaço sobre World of Warcraft</span>
       <span>Projeto acadêmico independente. Não afiliado à Blizzard Entertainment.</span>
     </div>
   </footer>
-
-  <div class="modal" id="modal">
-    <div class="box">
-      <button class="close" onclick="closeModal()">×</button>
-      <h2 id="modalTitle">Entrar</h2>
-      <form onsubmit="demoSubmit(event)">
-        <label>Nome de usuário</label>
-        <input required placeholder="Seu usuário">
-        <div id="emailField" hidden>
-          <label>E-mail</label>
-          <input type="email" placeholder="seu@email.com">
-        </div>
-        <label>Senha</label>
-        <input type="password" required placeholder="Sua senha">
-        <button class="primary" id="submitText">Entrar</button>
-      </form>
-      <p class="note">Demonstração visual: não realiza autenticação nem salva dados.</p>
-    </div>
-  </div>
 
   <script>
     function openModal(reg) {
