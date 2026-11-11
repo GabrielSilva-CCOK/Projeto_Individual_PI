@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Panorama de Azeroth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Alegreya+Sans:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../css/site.css">
+</head>
+<body>
+<div class="app">
+  <header>
+    <nav class="wrap">
+      <a class="logo" href="../index.html"><img width="100" src="../assets/logo.png" alt="logo"></a>
+      <div class="links">
+        <a href="../index.html">Página Inicial</a>
+        <a href="../jornada.html">Minha jornada</a>
+        <a href="../historia.html">História</a>
+        <a href="../jogabilidade.html">Jogabilidade</a>
+        <a href="../comunidade.html">Comunidade</a>
+      </div>
+      <div class="actions">
+        <button onclick="window.location.href='../login.html'">Entrar</button>
+        <button class="primary" onclick="window.location.href='../cadastro.html'">Criar conta</button>
+      </div>
+    </nav>
+  </header>
+
+  <header class="top">
+    <div class="brand">
+      <h1>Dashboard da comunidade</h1>
+      <p>Pesquisa com jogadores de World of Warcraft</p>
+    </div>
+    <nav class="tabs" aria-label="Dashboards">
+      <a class="tab" href="panorama.html" aria-current="page">Panorama de Azeroth</a>
+      <a class="tab" href="jornada.html">Jornada dos Aventureiros</a>
+    </nav>
+  </header>
+
+  <section class="kpis" aria-label="Indicadores">
+    <div class="panel">
+      <div class="kl">Quantidade de responstas ao formulario</div>
+      <div class="kv" id="k1v">— <small id="k1sub"></small></div>
+      <div class="ks"><span id="k1c" class="chip">—</span><span id="k1s"></span></div>
+    </div>
+    <div class="panel">
+      <div class="kl">Facção dominante</div>
+      <div class="kv" id="k2v">— <small id="k2sub"></small></div>
+      <div class="ks"><span id="k2c" class="chip">—</span><span id="k2s"></span></div>
+    </div>
+    <div class="panel">
+      <div class="kl">Classe dominante</div>
+      <div class="kv" id="k3v">— <small id="k3sub"></small></div>
+      <div class="ks"><span id="k3c" class="chip">—</span><span id="k3s"></span></div>
+    </div>
+    <div class="panel">
+      <div class="kl">Equilíbrio entre facções</div>
+      <div class="kv" id="k4v">— <small id="k4sub"></small></div>
+      <div class="ks"><span id="k4c" class="chip">—</span><span id="k4s"></span></div>
+    </div>
+  </section>
+
+  <main class="main g-panorama">
+    <section class="panel p-cls">
+      <h3>Classes</h3>
+      <p class="sub" id="cls-sub">Qual é sua classe favorita</p>
+      <div class="chart-box"><canvas id="c-cls" role="img" aria-label="Ranking das classes favoritas"></canvas></div>
+    </section>
+    <section class="panel p-fac">
+      <h3>Facções</h3>
+      <p class="sub">Qual é sua facção favorita</p>
+      <div class="chart-box"><canvas id="c-fac" role="img" aria-label="Distribuição entre Horda e Aliança"></canvas></div>
+    </section>
+    <section class="panel p-ver">
+      <h3>Versão do jogo</h3>
+      <p class="sub">WoW Classic ou Retail</p>
+      <div class="chart-box"><canvas id="c-ver" role="img" aria-label="Distribuição entre Retail e Classic"></canvas></div>
+    </section>
+    <section class="panel p-rol">
+      <h3>Papéis</h3>
+      <p class="sub">Qual é a sua role favorita</p>
+      <div class="chart-box"><canvas id="c-rol" role="img" aria-label="Distribuição entre Tank, Healer e DPS"></canvas></div>
+    </section>
+</main>
+</div>
+
+  <footer>
+    <div class="wrap foot">
+      <span>Tales of azeroth — Um espaço sobre World of Warcraft</span>
+      <span>Projeto acadêmico independente. Não afiliado à Blizzard Entertainment.</span>
+    </div>
+  </footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="sample-data.js"></script>
+</body>
+</html>
