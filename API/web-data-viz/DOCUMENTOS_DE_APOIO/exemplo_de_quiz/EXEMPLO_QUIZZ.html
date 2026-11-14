@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exemplo - Quiz</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* classes mínimas para indicar acerto/erro se o style.css não definir */
+        .text-success-with-bg { background: #d4edda; color: #155724; padding: 2px 4px; border-radius: 4px }
+        .text-danger-with-bg { background: #f8d7da; color: #721c24; padding: 2px 4px; border-radius: 4px }
+    </style>
 </head>
 
 
@@ -80,8 +85,7 @@
             alternativaA: "Janeiro",
             alternativaB: "Dezembro",
             alternativaC: "Junho",
-            alternativaD: "Agosto",
-            alternativaCorreta: "alternativaC"
+            alternativaD: "Agosto"
         },
 
         {
@@ -89,8 +93,7 @@
             alternativaA: "30 horas",
             alternativaB: "38 horas",
             alternativaC: "48 horas",
-            alternativaD: "24 horas",
-            alternativaCorreta: "alternativaD"
+            alternativaD: "24 horas"
         },
 
         {
@@ -98,8 +101,7 @@
             alternativaA: "Dez",
             alternativaB: "Doze",
             alternativaC: "Oito",
-            alternativaD: "Onze",
-            alternativaCorreta: "alternativaD"
+            alternativaD: "Onze"
         }
 
     ]
@@ -108,10 +110,18 @@
     let numeroDaQuestaoAtual = 0
     let pontuacaoFinal = 0
     let tentativaIncorreta = 0
-    let certas = 0
-    let erradas = 0
     let quantidadeDeQuestoes = listaDeQuestoes.length
-    // let isUltima = numeroDaQuestaoAtual == quantidadeDeQuestoes-1 ? true : false
+
+    // vetor para armazenar respostas do usuário (texto da opção escolhida)
+    const respostasUsuario = new Array(quantidadeDeQuestoes).fill(null)
+
+    // referências a elementos úteis
+    const btnSubmeter = document.getElementById('btnSubmeter')
+    const btnProx = document.getElementById('btnProx')
+    const btnTentarNovamente = document.getElementById('btnTentarNovamente')
+    const spanCertas = document.getElementById('spanCertas')
+    const spanErradas = document.getElementById('spanErradas')
+    const spanPontuacaoFinal = document.getElementById('spanPontuacaoFinal')
 
     function onloadEsconder() {
         document.getElementById('pontuacao').style.display = "none"
@@ -125,76 +135,73 @@
 
         document.getElementById('qtdQuestoes').innerHTML = quantidadeDeQuestoes
 
-        preencherHTMLcomQuestaoAtual(0)
+        numeroDaQuestaoAtual = 0
+        preencherHTMLcomQuestaoAtual(numeroDaQuestaoAtual)
 
         btnSubmeter.disabled = false
         btnProx.disabled = true
-        // btnConcluir.disabled = true
         btnTentarNovamente.disabled = true
     }
 
     function preencherHTMLcomQuestaoAtual(index) {
         habilitarAlternativas(true)
-        const questaoAtual = listaDeQuestoes[index]
-        numeroDaQuestaoAtual = index
-        console.log("questaoAtual")
-        console.log(questaoAtual)
+        const questao = listaDeQuestoes[index]
         document.getElementById("spanNumeroDaQuestaoAtual").innerHTML = Number(index) + 1 // ajustando porque o index começa em 0
-        document.getElementById("spanQuestaoExibida").innerHTML = questaoAtual.pergunta;
-        document.getElementById("labelOpcaoUm").innerHTML = questaoAtual.alternativaA;
-        document.getElementById("labelOpcaoDois").innerHTML = questaoAtual.alternativaB;
-        document.getElementById("labelOpcaoTres").innerHTML = questaoAtual.alternativaC;
-        document.getElementById("labelOpcaoQuatro").innerHTML = questaoAtual.alternativaD;
+        document.getElementById("spanQuestaoExibida").innerHTML = questao.pergunta;
+        document.getElementById("labelOpcaoUm").innerHTML = questao.alternativaA;
+        document.getElementById("labelOpcaoDois").innerHTML = questao.alternativaB;
+        document.getElementById("labelOpcaoTres").innerHTML = questao.alternativaC;
+        document.getElementById("labelOpcaoQuatro").innerHTML = questao.alternativaD;
+        // limpa marcações e estados
+        desmarcarRadioButtons()
+        limparCoresBackgroundOpcoes()
     }
 
     function submeter() {
         const options = document.getElementsByName("option"); // recupera alternativas no html
 
-        let hasChecked = false
+        let selected = null
         for (let i = 0; i < options.length; i++) {
             if (options[i].checked) {
-                hasChecked = true
+                selected = options[i]
                 break
             }
         }
 
-        if (!hasChecked) {
+        if (!selected) {
             alert("Não há alternativas escolhidas. Escolha uma opção.")
-        } else {
-            btnSubmeter.disabled = true
-            btnProx.disabled = false
-
-            habilitarAlternativas(false)
-
-            checarResposta()
+            return
         }
+
+        btnSubmeter.disabled = true
+        btnProx.disabled = false
+
+        habilitarAlternativas(false)
+
+        // armazena a resposta do usuário (texto da label associada)
+        const labelTexto = selected.labels && selected.labels[0] ? document.getElementById(selected.labels[0].id).innerText : selected.value
+        respostasUsuario[numeroDaQuestaoAtual] = labelTexto
     }
 
     function habilitarAlternativas(trueOrFalse) {
-        let opcaoEscolhida = trueOrFalse ? false : true
-
-        primeiraOpcao.disabled = opcaoEscolhida
-        segundaOpcao.disabled = opcaoEscolhida
-        terceiraOpcao.disabled = opcaoEscolhida
-        quartaOpcao.disabled = opcaoEscolhida
-
+        const disabled = !trueOrFalse
+        document.getElementById('primeiraOpcao').disabled = disabled
+        document.getElementById('segundaOpcao').disabled = disabled
+        document.getElementById('terceiraOpcao').disabled = disabled
+        document.getElementById('quartaOpcao').disabled = disabled
     }
 
     function avancar() {
         btnProx.disabled = true
         btnSubmeter.disabled = false
 
-        desmarcarRadioButtons()
-
+        // avança índice
         if (numeroDaQuestaoAtual < quantidadeDeQuestoes - 1) {
-            preencherHTMLcomQuestaoAtual(numeroDaQuestaoAtual)
-        } else if (numeroDaQuestaoAtual == quantidadeDeQuestoes - 1) {
-            alert("Atenção... a próxima é a ultima questão!")
+            numeroDaQuestaoAtual++
             preencherHTMLcomQuestaoAtual(numeroDaQuestaoAtual)
         } else {
             finalizarJogo()
         }
-        limparCoresBackgroundOpcoes()
     }
 
     function tentarNovamente() {
@@ -202,48 +209,17 @@
         window.location.reload()
     }
 
-    function checarResposta() {
-        const questaoAtual = listaDeQuestoes[numeroDaQuestaoAtual] // questão atual 
-        const respostaQuestaoAtual = questaoAtual.alternativaCorreta // qual é a resposta correta da questão atual
-
-        const options = document.getElementsByName("option"); // recupera alternativas no html
-
-        let alternativaCorreta = null // variável para armazenar a alternativa correta
-
-        options.forEach((option) => {
-            if (option.value === respostaQuestaoAtual) {
-                console.log("alternativaCorreta está no componente: " + alternativaCorreta)
-                alternativaCorreta = option.labels[0].id
-            }
-        })
-
-        // verifica se resposta assinalada é correta
-        options.forEach((option) => {
-            if (option.checked === true && option.value === respostaQuestaoAtual) {
-                document.getElementById(alternativaCorreta).classList.add("text-success-with-bg")
-                pontuacaoFinal++
-                certas++
-                document.getElementById("spanCertas").innerHTML = certas
-                numeroDaQuestaoAtual++
-            } else if (option.checked && option.value !== respostaQuestaoAtual) {
-                const wrongLabelId = option.labels[0].id
-
-                document.getElementById(wrongLabelId).classList.add("text-danger-with-bg")
-                document.getElementById(alternativaCorreta).classList.add("text-success-with-bg")
-                tentativaIncorreta++
-                erradas++
-                document.getElementById("spanErradas").innerHTML = erradas
-                numeroDaQuestaoAtual++
-            }
-        })
-    }
 
     function limparCoresBackgroundOpcoes() {
         const options = document.getElementsByName("option");
-        options.forEach((option) => {
-            document.getElementById(option.labels[0].id).classList.remove("text-danger-with-bg")
-            document.getElementById(option.labels[0].id).classList.remove("text-success-with-bg")
-        })
+        for (let i = 0; i < options.length; i++) {
+            const opt = options[i]
+            if (opt.labels && opt.labels[0]) {
+                const id = opt.labels[0].id
+                document.getElementById(id).classList.remove("text-danger-with-bg")
+                document.getElementById(id).classList.remove("text-success-with-bg")
+            }
+        }
     }
 
     function desmarcarRadioButtons() {
@@ -254,36 +230,22 @@
     }
 
     function finalizarJogo() {
-        let textoParaMensagemFinal = null
-        let classComCoresParaMensagemFinal = null
-        const porcentagemFinalDeAcertos = pontuacaoFinal / quantidadeDeQuestoes
-
-        if (porcentagemFinalDeAcertos <= 0.3) {
-            textoParaMensagemFinal = "Parece que você não estudou..."
-            classComCoresParaMensagemFinal = "text-danger-with-bg"
+        // exibe respostas do usuário
+        let linhas = []
+        for (let i = 0; i < quantidadeDeQuestoes; i++) {
+            const q = listaDeQuestoes[i]
+            const resp = respostasUsuario[i] ? respostasUsuario[i] : 'Não respondeu'
+            linhas.push(`${i+1}. ${q.pergunta} — Resposta: ${resp}`)
         }
-        else if (porcentagemFinalDeAcertos > 0.3 && porcentagemFinalDeAcertos < 0.9) {
-            textoParaMensagemFinal = "Pode melhorar na próxima, hein!"
-            classComCoresParaMensagemFinal = "text-warning-with-bg"
-        }
-        else if (porcentagemFinalDeAcertos >= 0.9) {
-            textoParaMensagemFinal = "Uau, parabéns!"
-            classComCoresParaMensagemFinal = "text-success-with-bg"
-        }
-
-        textoParaMensagemFinal += "<br> Você acertou " + Math.round((porcentagemFinalDeAcertos)*100) + "% das questões."
-
-
-        document.getElementById('msgFinal').innerHTML = textoParaMensagemFinal
-        document.getElementById('msgFinal').classList.add(classComCoresParaMensagemFinal) 
-        document.getElementById('spanPontuacaoFinal').innerHTML = pontuacaoFinal
+        document.getElementById('spanPontuacaoFinal').innerText = '---'
+        document.getElementById('msgFinal').innerHTML = linhas.join('<br>')
 
         document.getElementById('jogo').classList.add("text-new-gray") 
 
         btnProx.disabled = true
         btnSubmeter.disabled = true
-        // btnConcluir.disabled = true
         btnTentarNovamente.disabled = false
-
     }
+
+    // função checarResposta removida: respostas são apenas armazenadas em respostasUsuario
 </script>
