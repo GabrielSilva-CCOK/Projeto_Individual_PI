@@ -1,70 +1,78 @@
-var usuarioModel = require("../models/formularioModel");
+var formularioModel = require("../models/formularioModel");
 
-function PuxarPergunta(req, res) {
-        formularioModel.PuxarPergunta(num_pergunta)
-            .then(
-                function (resultadoPuxarPergunta) {
-                    console.log(`\nResultados encontrados: ${resultadoPuxarPergunta.length}`);
-                    console.log(`Resultados: ${JSON.stringify(resultadoPuxarPergunta)}`); // transforma JSON em String
+function puxarPergunta(req, res) {
+    var numPergunta = req.body.numPergunta;
+    if (numPergunta == undefined) {
+        res.status(400).send("numPergunta está undefined!");
+        return;
+    }
 
-                    if (resultadoAutenticar.length >= 1) {
-                        for(let i = 0; i < resultadoAutenticar.length; i ++){
-                            console.log(resultadoPuxarPergunta);
-                        res.json({
-                            enunciado: resultadoPuxarPergunta[i].enunciado,
-                            titulo: resultadoPuxarPergunta[i].titulo
-                        });
-                        }
-                        
-                    }
+    formularioModel.puxarPergunta(numPergunta).then(function (resultado) {
+        if (resultado.length > 0) {
+            const alternativas = resultado.map(row => ({ idAlternativa: row.idAlternativa, titulo: row.titulo }));
+            res.status(200).json({
+                idPergunta: resultado[0].idPergunta,
+                enunciado: resultado[0].enunciado,
+                alternativas: alternativas
+            });
+        } else {
+            res.status(204).send("Nenhum resultado encontrado!");
+        }
+    }).catch(function (erro) {
+        console.log(erro);
+        console.log("\nHouve um erro ao coletar a pergunta! Erro: ", erro.sqlMessage);
+        res.status(500).json(erro.sqlMessage);
+    });
+}
+
+function listarPerguntas(req, res) {
+    formularioModel.listarPerguntas().then(function (resultado) {
+        if (resultado.length > 0) {
+            const mapa = {};
+            resultado.forEach(row => {
+                const id = row.idPergunta;
+                if (!mapa[id]) {
+                    mapa[id] = { idPergunta: id, enunciado: row.enunciado, alternativas: [] };
                 }
-            ).catch(
-                function (erro) {
-                    console.log(erro);
-                    console.log("\nHouve um erro ao coletar as perguntas! Erro: ", erro.sqlMessage);
-                    res.status(500).json(erro.sqlMessage);
-                }
-            );
-
+                mapa[id].alternativas.push({ idAlternativa: row.idAlternativa, titulo: row.titulo });
+            });
+            const perguntas = Object.values(mapa);
+            res.status(200).json(perguntas);
+        } else {
+            res.status(204).send("Nenhum resultado encontrado!");
+        }
+    }).catch(function (erro) {
+        console.log(erro);
+        console.log("\nHouve um erro ao listar perguntas! Erro: ", erro.sqlMessage);
+        res.status(500).json(erro.sqlMessage);
+    });
 }
 
 function enviarResposta(req, res) {
-    console.log('REQ.BODY cadastrar ->', req.body);
-    // Crie uma variável que vá recuperar os valores do arquivo cadastro.html
-    var nome = req.body.nomeServer;
-    var email = req.body.emailServer;
-    var senha = req.body.senhaServer;
-    // não usamos vínculo com empresas; ignora campos relacionados
+    var idUsuario = req.body.id_usuario;
+    var idPergunta = req.body.id_pergunta;
+    var idAlternativa = req.body.id_alternativa;
 
-    // Faça as validações dos valores
-    if (nome == undefined) {
-        res.status(400).send("Seu nome está undefined!");
-    } else if (email == undefined) {
-        res.status(400).send("Seu email está undefined!");
-    } else if (senha == undefined) {
-        res.status(400).send("Sua senha está undefined!");
+    if (idUsuario == undefined) {
+        res.status(400).send("id_usuario está undefined!");
+    } else if (idPergunta == undefined) {
+        res.status(400).send("id_pergunta está undefined!");
+    } else if (idAlternativa == undefined) {
+        res.status(400).send("id_alternativa está undefined!");
     } else {
-
-        // Passe os valores como parâmetro e vá para o arquivo usuarioModel.js
-        usuarioModel.cadastrar(nome, email, senha)
-            .then(
-                function (resultado) {
-                    res.json(resultado);
-                }
-            ).catch(
-                function (erro) {
-                    console.log(erro);
-                    console.log(
-                        "\nHouve um erro ao realizar o cadastro! Erro: ",
-                        erro.sqlMessage
-                    );
-                    res.status(500).json(erro.sqlMessage);
-                }
-            );
+        formularioModel.enviarResposta(idUsuario, idPergunta, idAlternativa)
+            .then(function (resultado) {
+                res.json(resultado);
+            }).catch(function (erro) {
+                console.log(erro);
+                console.log("\nHouve um erro ao enviar a resposta! Erro: ", erro.sqlMessage);
+                res.status(500).json(erro.sqlMessage);
+            });
     }
 }
 
 module.exports = {
-    autenticar,
-    cadastrar
-}
+    puxarPergunta,
+    listarPerguntas,
+    enviarResposta
+};

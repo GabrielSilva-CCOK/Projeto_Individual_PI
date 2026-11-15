@@ -583,3 +583,45 @@ footer {
   font-weight: 600;
   color: var(--muted);
 }
+
+/* Formulário: alinha alternativas com as perguntas e melhora visual */
+#quizForm fieldset {
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.02);
+}
+
+#quizForm legend {
+  font-weight: 700;
+  display: block;
+  margin-bottom: 8px;
+  padding: 0 4px;
+}
+
+#quizForm fieldset > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+#quizForm input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  vertical-align: middle;
+  accent-color: var(--gold);
+}
+
+#quizForm label {
+  margin: 0;
+  display: inline-block;
+  color: inherit;
+}
+
+@media (max-width: 520px) {
+  #quizForm fieldset { padding: 12px; }
+  #quizForm input[type="radio"] { width: 16px; height: 16px; }
+}

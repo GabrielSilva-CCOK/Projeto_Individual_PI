@@ -26,21 +26,14 @@
   <main>
     <section style="padding:75px 0;">
       <div class="wrap">
-        <div class="box" style="max-width:700px; margin:auto;">
+        <div class="box" style="max-width:900px; margin:auto;">
           <h2 style="font-size:28px; margin-bottom:14px;">Formulário</h2>
-          <p class="muted">Responda as perguntas abaixo. Seus dados serão salvos localmente nesta demonstração.</p>
-          <form id="formForm">
-            <label>Nome</label>
-            <input id="f_nome" required placeholder="Seu nome">
-            <label>Idade</label>
-            <input id="f_idade" type="number" min="0" placeholder="Idade">
-            <label>Classe favorita</label>
-            <input id="f_classe" placeholder="Ex: Mago">
-            <label>Comentários</label>
-            <textarea id="f_comentarios" rows="4" style="width:100%; padding:10px; background:var(--bg); color:inherit; border:1px solid var(--line); border-radius:4px;"></textarea>
+          <p class="muted" id="intro">Responda as perguntas abaixo.</p>
+          <form id="quizForm" onsubmit="return false;">
+            <div id="questions"></div>
+            <div id="nav" style="display:flex; gap:8px; margin-top:12px;"></div>
             <div style="display:flex; gap:8px; margin-top:12px;">
-              <button type="submit" class="primary">Enviar</button>
-              <button type="button" onclick="window.location.href='index.html'">Cancelar</button>
+              <button type="button" onclick="window.location.href='jornada.html'">Cancelar</button>
             </div>
             <p id="form-msg" class="note" style="margin-top:12px; display:none;"></p>
           </form>
@@ -57,28 +50,150 @@
   </footer>
 
   <script>
-    const form = document.getElementById('formForm');
-    const msg = document.getElementById('form-msg');
+    document.addEventListener('DOMContentLoaded', function () {
+      const userId = sessionStorage.ID_USUARIO;
+      const questionsContainer = document.getElementById('questions');
+      const msg = document.getElementById('form-msg');
 
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      const payload = {
-        nome: document.getElementById('f_nome').value,
-        idade: document.getElementById('f_idade').value,
-        classe: document.getElementById('f_classe').value,
-        comentarios: document.getElementById('f_comentarios').value,
-        usuario: sessionStorage.EMAIL_USUARIO || null
-      };
-      // demonstração: salvar no localStorage
-      const existing = JSON.parse(localStorage.getItem('formularios') || '[]');
-      existing.push(payload);
-      localStorage.setItem('formularios', JSON.stringify(existing));
-      msg.style.display = 'block';
-      msg.textContent = 'Formulário enviado. Obrigado!';
-      form.reset();
-      setTimeout(() => {
-        window.location.href = 'index.html';
-      }, 1400);
+      if (!userId) {
+        if (confirm('Você precisa estar logado para responder ao formulário. Deseja entrar agora?')) {
+          window.location.href = 'cadastro/login.html';
+        } else {
+          window.location.href = 'index.html';
+        }
+        return;
+      }
+
+      fetch('/formulario/perguntas')
+        .then(res => {
+          if (res.status === 204) return [];
+          return res.json();
+        })
+        .then(perguntas => {
+          if (!perguntas || perguntas.length === 0) {
+            questionsContainer.innerHTML = '<p class="muted">Nenhuma pergunta disponível.</p>';
+            return;
+          }
+
+          let current = 0;
+          const respostas = {}; // idPergunta -> idAlternativa
+          const nav = document.getElementById('nav');
+
+          function renderQuestion(index) {
+            const q = perguntas[index];
+            questionsContainer.innerHTML = '';
+
+            const fieldset = document.createElement('fieldset');
+            fieldset.style.marginTop = '12px';
+            const legend = document.createElement('legend');
+            legend.textContent = q.enunciado;
+            fieldset.appendChild(legend);
+
+            q.alternativas.forEach(a => {
+              const id = `q_${q.idPergunta}_a_${a.idAlternativa}`;
+              const wrapper = document.createElement('div');
+              wrapper.style.marginTop = '6px';
+
+              const radio = document.createElement('input');
+              radio.type = 'radio';
+              radio.name = `q_${q.idPergunta}`;
+              radio.value = a.idAlternativa;
+              radio.id = id;
+              if (respostas[q.idPergunta] && respostas[q.idPergunta] == a.idAlternativa) {
+                radio.checked = true;
+              }
+
+              const label = document.createElement('label');
+              label.htmlFor = id;
+              label.style.marginLeft = '8px';
+              label.textContent = a.titulo;
+
+              wrapper.appendChild(radio);
+              wrapper.appendChild(label);
+              fieldset.appendChild(wrapper);
+            });
+
+            const progress = document.createElement('div');
+            progress.className = 'muted';
+            progress.style.marginTop = '10px';
+            progress.textContent = `Pergunta ${index + 1} de ${perguntas.length}`;
+
+            questionsContainer.appendChild(fieldset);
+            questionsContainer.appendChild(progress);
+
+            // build navigation
+            nav.innerHTML = '';
+            const nextBtn = document.createElement('button');
+            nextBtn.type = 'button';
+            nextBtn.className = 'primary';
+            nextBtn.textContent = index === perguntas.length - 1 ? 'Enviar respostas' : 'Próxima pergunta';
+
+            nextBtn.addEventListener('click', () => {
+              const checked = fieldset.querySelector('input[type="radio"]:checked');
+              if (!checked) {
+                msg.style.display = 'block';
+                msg.textContent = 'Selecione uma alternativa para prosseguir.';
+                return;
+              }
+              msg.style.display = 'none';
+              respostas[q.idPergunta] = checked.value;
+
+              if (index < perguntas.length - 1) {
+                current = index + 1;
+                renderQuestion(current);
+              } else {
+                // enviar todas as respostas
+                // verificar se todas respondidas
+                const faltando = perguntas.find(p => !respostas[p.idPergunta]);
+                if (faltando) {
+                  msg.style.display = 'block';
+                  msg.textContent = 'Você precisa responder todas as perguntas antes de enviar.';
+                  return;
+                }
+
+                const promises = [];
+                perguntas.forEach(p => {
+                  const body = {
+                    id_usuario: userId,
+                    id_pergunta: p.idPergunta,
+                    id_alternativa: respostas[p.idPergunta]
+                  };
+                  const pFetch = fetch('/formulario/resposta', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                  }).then(r => {
+                    if (!r.ok) return r.text().then(t => Promise.reject(t));
+                    return r.json();
+                  });
+                  promises.push(pFetch);
+                });
+
+                Promise.all(promises).then(() => {
+                  msg.style.display = 'block';
+                  msg.textContent = 'Respostas enviadas com sucesso!';
+                  setTimeout(() => {
+                    window.location.href = 'dashboard/jornada.html';
+                  }, 1200);
+                }).catch(err => {
+                  console.error(err);
+                  msg.style.display = 'block';
+                  msg.textContent = 'Erro ao enviar respostas: ' + err;
+                });
+              }
+            });
+
+            nav.appendChild(nextBtn);
+          }
+
+          // render first question
+          renderQuestion(0);
+        })
+        .catch(err => {
+          console.error(err);
+          msg.style.display = 'block';
+          msg.textContent = 'Erro ao carregar perguntas.';
+        });
     });
   </script>
 </body>

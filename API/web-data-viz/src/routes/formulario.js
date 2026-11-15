@@ -9,7 +9,11 @@ router.post("/resposta", function (req, res) {
 })
 
 router.post("/pergunta", function (req, res) {
-    formularioController.PuxarPergunta(req, res);
+    formularioController.puxarPergunta(req, res);
+});
+
+router.get("/perguntas", function (req, res) {
+    formularioController.listarPerguntas(req, res);
 });
 
 module.exports = router;
