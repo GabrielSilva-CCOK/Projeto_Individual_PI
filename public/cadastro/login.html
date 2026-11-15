@@ -105,7 +105,12 @@
             sessionStorage.EMAIL_USUARIO = json.email;
             sessionStorage.NOME_USUARIO = json.nome;
             clearLoginError();
-            window.location = '../index.html'
+            let desejaFormulario = confirm('Login realizado com sucesso! Deseja preencher o formulário agora?');
+            if (desejaFormulario) {
+              window.location = '../formulario.html';
+            } else {
+              window.location = '../index.html';
+            }
           });
         } else {
           console.log('Houve um erro ao tentar realizar o login!');

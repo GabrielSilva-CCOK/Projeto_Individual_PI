@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Formulário — Azeroth</title>
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+  <header>
+    <nav class="wrap">
+      <a class="logo" href="index.html"><img width="100px" src="assets/logo.png"></a>
+      <div class="links">
+        <a href="index.html">Pagina Inicial</a>
+        <a href="jornada.html">Minha jornada</a>
+        <a href="historia.html">Historia</a>
+        <a href="conteudo.html">Conteúdo</a>
+        <a href="classes.html">Classes</a>
+      </div>
+      <div class="actions">
+        <button onclick="window.location.href='dashboard/jornada.html'">Dashboard</button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section style="padding:75px 0;">
+      <div class="wrap">
+        <div class="box" style="max-width:700px; margin:auto;">
+          <h2 style="font-size:28px; margin-bottom:14px;">Formulário</h2>
+          <p class="muted">Responda as perguntas abaixo. Seus dados serão salvos localmente nesta demonstração.</p>
+          <form id="formForm">
+            <label>Nome</label>
+            <input id="f_nome" required placeholder="Seu nome">
+            <label>Idade</label>
+            <input id="f_idade" type="number" min="0" placeholder="Idade">
+            <label>Classe favorita</label>
+            <input id="f_classe" placeholder="Ex: Mago">
+            <label>Comentários</label>
+            <textarea id="f_comentarios" rows="4" style="width:100%; padding:10px; background:var(--bg); color:inherit; border:1px solid var(--line); border-radius:4px;"></textarea>
+            <div style="display:flex; gap:8px; margin-top:12px;">
+              <button type="submit" class="primary">Enviar</button>
+              <button type="button" onclick="window.location.href='index.html'">Cancelar</button>
+            </div>
+            <p id="form-msg" class="note" style="margin-top:12px; display:none;"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <span>Tales of azeroth — Formulário</span>
+      <span>Projeto acadêmico independente.</span>
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('formForm');
+    const msg = document.getElementById('form-msg');
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const payload = {
+        nome: document.getElementById('f_nome').value,
+        idade: document.getElementById('f_idade').value,
+        classe: document.getElementById('f_classe').value,
+        comentarios: document.getElementById('f_comentarios').value,
+        usuario: sessionStorage.EMAIL_USUARIO || null
+      };
+      // demonstração: salvar no localStorage
+      const existing = JSON.parse(localStorage.getItem('formularios') || '[]');
+      existing.push(payload);
+      localStorage.setItem('formularios', JSON.stringify(existing));
+      msg.style.display = 'block';
+      msg.textContent = 'Formulário enviado. Obrigado!';
+      form.reset();
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 1400);
+    });
+  </script>
+</body>
+</html>

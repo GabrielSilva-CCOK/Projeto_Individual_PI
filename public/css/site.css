@@ -109,13 +109,14 @@ button,
   gap: 8px;
 }
 
-/* Hero */
 .hero {
   min-height: 570px;
   display: flex;
   align-items: center;
-  background: linear-gradient(90deg, #0d1015 5%, #0d1015e8 48%, #0d101555),
-    url('../assets/hero.jpg') center/cover;
+  background-image: linear-gradient(90deg, #0d1015 5%, #0d1015e8 48%, #0d101555),
+    var(--hero-image, url('../assets/hero.jpg'));
+  background-position: center;
+  background-size: cover;
 }
 
 .hero article {
