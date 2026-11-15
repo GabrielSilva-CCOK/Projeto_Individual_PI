@@ -1,13 +1,13 @@
 var formularioModel = require("../models/formularioModel");
 
 function puxarPergunta(req, res) {
-    var numPergunta = req.body.numPergunta;
-    if (numPergunta == undefined) {
+    var questionId = req.body.numPergunta;
+    if (questionId == undefined) {
         res.status(400).send("numPergunta está undefined!");
         return;
     }
 
-    formularioModel.puxarPergunta(numPergunta).then(function (resultado) {
+    formularioModel.puxarPergunta(questionId).then(function (resultado) {
         if (resultado.length > 0) {
             const alternativas = resultado.map(row => ({ idAlternativa: row.idAlternativa, titulo: row.titulo }));
             res.status(200).json({
@@ -49,18 +49,18 @@ function listarPerguntas(req, res) {
 }
 
 function enviarResposta(req, res) {
-    var idUsuario = req.body.id_usuario;
-    var idPergunta = req.body.id_pergunta;
-    var idAlternativa = req.body.id_alternativa;
+    var userId = req.body.id_usuario;
+    var questionId = req.body.id_pergunta;
+    var alternativeId = req.body.id_alternativa;
 
-    if (idUsuario == undefined) {
+    if (userId == undefined) {
         res.status(400).send("id_usuario está undefined!");
-    } else if (idPergunta == undefined) {
+    } else if (questionId == undefined) {
         res.status(400).send("id_pergunta está undefined!");
-    } else if (idAlternativa == undefined) {
+    } else if (alternativeId == undefined) {
         res.status(400).send("id_alternativa está undefined!");
     } else {
-        formularioModel.enviarResposta(idUsuario, idPergunta, idAlternativa)
+        formularioModel.enviarResposta(userId, questionId, alternativeId)
             .then(function (resultado) {
                 res.json(resultado);
             }).catch(function (erro) {
