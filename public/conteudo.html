@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Conteúdo | Tales of Azeroth</title>
+  <title>Conteúdos — Azeroth</title>
   <link rel="stylesheet" href="css/site.css">
 </head>
 <body>
   <header>
     <nav class="wrap">
-      <a class="logo" href="index.html"><img width = 100px src="assets\logo.png"></a>
+      <a class="logo" href="#inicio"><img width = 100px src="assets\logo.png"></a>
       <div class="links">
         <a href="index.html">Pagina Inicial</a>
         <a href="jornada.html">Minha jornada</a>
@@ -25,79 +25,122 @@
   </header>
 
   <main>
-    <section class="hero" id="inicio">
+    <section class="hero" style="background-image: linear-gradient(90deg, rgba(11,14,18,0.8) 5%, rgba(11,14,18,0.35) 48%), url('assets/hero.jpg'); min-height:360px;">
       <div class="wrap">
         <article>
-          <div class="eyebrow">Mecânicas de jogo</div>
-          <h1>Jogabilidade de <span>Azeroth</span></h1>
-          <p>Guias práticos sobre papéis, atividades em grupo e dicas para diferentes estilos de jogo.</p>
+          <div class="eyebrow">Conteúdos do jogo</div>
+          <h1>Diversas atividades pensadas na interação</h1>
+          <p class="muted">Explore os modos de jogo, atividades e as formas pelas quais jogadores se conectam, colaboram e constroem histórias coletivas.</p>
         </article>
       </div>
     </section>
 
     <section>
       <div class="wrap">
+        <div class="intro">
+          <div class="eyebrow">Visão geral</div>
+          <h2>Conteúdo pensado para jogar junto</h2>
+          <p class="muted">World of Warcraft oferece uma variedade de experiências desde aventuras solo até desafios que exigem coordenação de dezenas de jogadores. O design do jogo promove cooperação, especialização de papéis e interações sociais que formam a base da comunidade.</p>
+        </div>
+
         <div class="grid">
           <div class="card">
-            <img src="assets/tank.jpg" alt="Tanque">
+            <img src="assets/quest.jfif" alt="Missões e História">
             <div class="pad">
-              <div class="tag">Papel</div>
-              <h3>Tanque</h3>
-              <p class="muted">Responsável por atrair a atenção dos inimigos e proteger o grupo.</p>
+              <div class="tag">Missões</div>
+              <h3>Missões e narrativa</h3>
+              <p class="muted">Histórias distribuídas por regiões que guiam a progressão do jogador. Missões oferecem contexto, recompensas e oportunidades.</p>
             </div>
           </div>
+
           <div class="card">
-            <img src="assets/healer.jpg" alt="Curador">
+            <img src="assets/card2.jpg" alt="Masmorras">
             <div class="pad">
-              <div class="tag">Papel</div>
-              <h3>Curador</h3>
-              <p class="muted">Mantém os aliados vivos com curas e remoção de efeitos negativos.</p>
+              <div class="tag">Masmorras</div>
+              <h3>Masmorras (dungeons)</h3>
+              <p class="muted">Conteúdo PvE em grupo para 5 jogadores. Exige comunicação, conhecimento de mecânicas e divisão de funções (tank, healer, DPS). Um excelente ponto de entrada para formar equipes e aprender a jogar em grupo.</p>
             </div>
           </div>
+
           <div class="card">
-            <img src="assets/dps.jpg" alt="DPS">
+            <img src="assets/raid.png" alt="Raides">
             <div class="pad">
-              <div class="tag">Papel</div>
-              <h3>DPS</h3>
-              <p class="muted">Foca em causar dano rápido para eliminar alvos antes que causem estragos.</p>
+              <div class="tag">Raides</div>
+              <h3>Raides — desafios de grande escala</h3>
+              <p class="muted">Encontros coordenados para dezenas de jogadores. Planejamento, comunicação em tempo real e papéis claros são essenciais.</p>
             </div>
           </div>
         </div>
 
-        <div class="intro" style="margin-top:40px;">
-          <div class="eyebrow">Atividades</div>
-          <h2>O que fazer em Azeroth</h2>
-          <p class="muted">Explore masmorras, participe de raides, teste suas habilidades em PvP e descubra cada canto do mundo.</p>
+        <div style="margin-top:28px;" class="grid">
+          <div class="card">
+            <img src="assets/pvp.jpg" alt="PvP">
+            <div class="pad">
+              <div class="tag">Jogador vs Jogador</div>
+              <h3>PvP e mundos compartilhados</h3>
+              <p class="muted">Batalhas entre jogadores em arenas, campos de batalha e zonas de mundo aberto. PvP cria encontros imprevisíveis que testam habilidade e cooperação dentro das próprias facções.</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <img src="assets/guild.jpg" alt="Guildas">
+            <div class="pad">
+              <div class="tag">Guildas</div>
+              <h3>Guildas e grupos sociais</h3>
+              <p class="muted">Estruturas sociais formais que organizam atividades, recrutam membros e fortalecem a colaboração. Guildas são o principal motor de cooperação a longo prazo: compartilham estratégias, recursos e eventos.</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <img src="assets/economia.jpg" alt="Economia">
+            <div class="pad">
+              <div class="tag">Economia</div>
+              <h3>Economia e trocas entre jogadores</h3>
+              <p class="muted">O comércio do jogo é inteiramente dirigido pelos proprios jogadores, assim artesãos, mercadores e colecionadores encontram propósito dentro da comunidade.</p>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+
+        <section style="padding-top:36px;">
+          <div class="intro">
+            <div class="eyebrow">Cooperação em destaque</div>
+            <h2>Por que jogar com outros transforma a experiência</h2>
+            <p class="muted">A interação entre jogadores é mais que um recurso — é o coração do jogo. Cooperar significa dividir responsabilidades, ensinar e aprender, celebrar conquistas e resolver contratempos juntos.</p>
+          </div>
+
+          <div class="grid">
+            <div class="card">
+              <div class="pad">
+                <div class="tag">Papéis e especialização</div>
+                <h3>Papéis complementares</h3>
+                <p class="muted">Tanks protegem, healers sustentam e DPS causam dano. Cada papel é importante, entender o seu e respeitar os demais é chave para o sucesso no jogo.</p>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="pad">
+                <div class="tag">Comunicação</div>
+                <h3>Comunicação em tempo real</h3>
+                <p class="muted">VoIP, mensagens e sinais permitem coordenar habilidades e reagir a mecânicas. Equipes bem comunicadas superam desafios complexos com eficiência.</p>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="pad">
+                <div class="tag">Aprendizado coletivo</div>
+                <h3>Mentoria e aprendizado</h3>
+                <p class="muted">Jogadores experientes orientam novos membros, criando ciclos de melhora que elevam o nível da comunidade inteira. Essa transmissão de conhecimento é vital para a longevidade do jogo.</p>
+              </div>
+            </div>
+          </div>
+        </section>
   </main>
 
   <footer>
     <div class="wrap foot">
-      <span>Tales of azeroth — Um espaço sobre World of Warcraft</span>
+      <span>AZEROTH — Conteúdos e comunidade</span>
       <span>Projeto acadêmico independente. Não afiliado à Blizzard Entertainment.</span>
     </div>
   </footer>
-
-  <script>
-    function openModal(reg) {
-      document.getElementById('modal').classList.add('show');
-      document.getElementById('modalTitle').textContent = reg ? 'Criar conta' : 'Entrar';
-      document.getElementById('emailField').hidden = !reg;
-      document.getElementById('submitText').textContent = reg ? 'Cadastrar' : 'Entrar';
-    }
-    function closeModal() {
-      document.getElementById('modal').classList.remove('show');
-    }
-    function demoSubmit(e) {
-      e.preventDefault();
-      alert('Demonstração visual: autenticação não conectada.');
-      closeModal();
-    }
-    document.getElementById('modal').addEventListener('click', e => {
-      if (e.target.id === 'modal') closeModal();
-    });
-  </script>
 </body>
 </html>

@@ -56,6 +56,28 @@ nav {
   letter-spacing: 2px;
 }
 
+.logo img {
+  display: block;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  max-height: 64px;
+}
+
+/* ensure logo never receives decorative borders from other image rules */
+header nav .logo img,
+.logo > img {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  max-height: 64px;
+  height: auto;
+  width: auto;
+}
+
 .links {
   display: flex;
   gap: 20px;
@@ -173,20 +195,21 @@ section {
   border-radius: 7px;
   overflow: hidden;
 }
-.card:hover{
+.card.interactive:hover,
+.card.card-link:hover,
+.card-link .card:hover{
   background: rgba(214,179,106,0.2);
   transition: background 0.2s;
 }
 
 .card img {
   width: 100%;
-  height: 180px; /* fixed height for uniform cards */
+  height: 180px; 
   object-fit: cover;
   display: block;
 }
 
-/* framed border for card images (matches .art) */
-.card img { border-radius: 7px; border: 3px solid var(--gold); }
+
 
 .pad {
   padding: 20px;
@@ -237,6 +260,12 @@ section {
   background: linear-gradient(#0002, #0008),
     url('../assets/img1.jpg')
     center/cover;
+}
+.classes-page img:not(.role-icon) {
+  border: #d6b36a solid;
+  border-radius: 7px;
+  display: block;
+  object-fit: cover;
 }
 .raid {
   height: 340px;
@@ -476,7 +505,9 @@ footer {
 #classes-grid.grid { gap: 18px; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); }
 .roles-overview .card img { height: 180px; object-fit: cover; }
 .card { display:flex; flex-direction:column; justify-content:flex-start; transition:transform .18s ease, box-shadow .18s ease; box-shadow:none; transform:none; }
-.card:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(0,0,0,0.45); }
+.card.interactive:hover,
+.card.card-link:hover,
+.card-link .card:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(0,0,0,0.45); }
 .roles-overview .card { cursor: default; transform: none; box-shadow: none; }
 .roles-overview .card:hover { transform: none; box-shadow: none; }
 /* ensure the top role cards remain static on hover (override generic .card:hover) */
