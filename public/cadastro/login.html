@@ -4,18 +4,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Entrar — Azeroth</title>
-  <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="../css/site.css">
 </head>
 <body>
   <header>
     <nav class="wrap">
-      <a class="logo" href="index.html"><img width = 100px src="public\assets\logo.png"></a>
+      <a class="logo" href="../index.html"><img width = 100px src="../assets\logo.png"></a>
       <div class="links">
-        <a href="index.html">Explorar</a>
-        <a href="jornada.html">Minha jornada</a>
-        <a href="historia.html">Historia</a>
-        <a href="jogabilidade.html">Jogabilidade</a>
-        <a href="comunidade.html">Comunidade</a>
+        <a href="../index.html">Pagina Inicial</a>
+        <a href="../jornada.html">Minha jornada</a>
+        <a href="../historia.html">Historia</a>
+        <a href="../conteudo.html">Conteudo</a>
+        <a href="../classes.html">Classes</a>
       </div>
       <div class="actions">
         <button class="primary" onclick="location.href='cadastro.html'">Criar conta</button>
@@ -36,6 +36,7 @@
               <input id="ipt_senha" type="password" class="input" required placeholder="Sua senha">
               <button type="button" class="botao-olho" onclick="alternarSenha('ipt_senha', this)">Mostrar</button>
             </div>
+            <p id="msg_login_erro" class="error-text" style="display:none"></p>
             <button type="button" onclick="entrar()" class="primary" style="width:100%;">Entrar</button>
           </form>
           <p class="note" style="margin-top:12px; text-align:center;">
@@ -52,37 +53,38 @@
     </div>
   </footer>
   <script>
-    const iptEmail = document.getElementById('ipt_email');
-    const iptSenha = document.getElementById('ipt_senha');
+    const iptEmail = ipt_email.value
+    const iptSenha = ipt_senha.value
 
     function alternarSenha(idCampo, botao) {
-      let campo = null;
-      if (typeof idCampo === 'string') campo = document.getElementById(idCampo);
-      if (!campo && botao) {
-        if (botao.previousElementSibling && botao.previousElementSibling.tagName === 'INPUT') {
-          campo = botao.previousElementSibling;
-        } else if (botao.parentElement) {
-          campo = botao.parentElement.querySelector('input[type="password"]') || botao.parentElement.querySelector('input');
-        }
-      }
-      if (!campo) campo = document.querySelector('input[type="password"]') || document.querySelector('input');
-      if (!campo) return;
-
+      const campo = document.getElementById(idCampo);
       if (campo.type === 'password') {
         campo.type = 'text';
-        if (botao) botao.textContent = 'Ocultar';
+        botao.textContent = 'Ocultar';
       } else {
         campo.type = 'password';
-        if (botao) botao.textContent = 'Mostrar';
+        botao.textContent = 'Mostrar';
       }
     }
 
-    function entrar() {
-      const emailVar = (iptEmail && iptEmail.value) ? iptEmail.value.trim() : '';
-      const senhaVar = (iptSenha && iptSenha.value) ? iptSenha.value : '';
+    function showLoginError(message) {
+      const msg = document.getElementById('msg_login_erro')
+      msg.innerHTML = message;
+      msg.style.display = 'block';
+    }
 
+    function clearLoginError() {
+      const msg = document.getElementById('msg_login_erro')
+      msg.innerHTML = '';
+      msg.style.display = 'none';
+    }
+
+    function entrar() {
+      clearLoginError();
+      const emailVar = ipt_email.value
+      const senhaVar = ipt_senha.value
       if (!emailVar || !senhaVar) {
-        alert('Preencha todos os campos.');
+        showLoginError('Preencha todos os campos.');
         return false;
       }
 
@@ -102,23 +104,22 @@
             console.log(json);
             sessionStorage.EMAIL_USUARIO = json.email;
             sessionStorage.NOME_USUARIO = json.nome;
-            sessionStorage.ID_USUARIO = json.id;
-            sessionStorage.AQUARIOS = JSON.stringify(json.aquarios || []);
-            window.location = 'dashboard/panorama.html';
+            clearLoginError();
+            window.location = '../index.html'
           });
         } else {
           console.log('Houve um erro ao tentar realizar o login!');
           resposta.text().then(texto => {
             console.error(texto);
-            alert(texto || 'Erro ao realizar login.');
+            showLoginError(texto || 'Erro ao realizar login.');
           });
         }
       }).catch(function (erro) {
         console.error('Erro no fetch /usuarios/autenticar:', erro);
-        alert('Erro ao conectar com o servidor.');
+        showLoginError('Erro ao conectar com o servidor.');
       });
 
-      return false;
+    return false;
     }
   </script>
 </body>

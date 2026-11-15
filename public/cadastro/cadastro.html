@@ -5,18 +5,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Criar conta — Azeroth</title>
-  <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="../css/site.css">
 </head>
 <body>
   <header>
     <nav class="wrap">
-      <a class="logo" href="index.html"><img width = 100px src="assets\logo.png"></a>
+      <a class="logo" href="../index.html"><img width = 100px src="../assets\logo.png"></a>
       <div class="links">
-        <a href="index.html">Pagina Inicial</a>
-        <a href="jornada.html">Minha jornada</a>
-        <a href="historia.html">Historia</a>
-        <a href="jogabilidade.html">Jogabilidade</a>
-        <a href="comunidade.html">Comunidade</a>
+        <a href="../index.html">Pagina Inicial</a>
+        <a href="../jornada.html">Minha jornada</a>
+        <a href="../historia.html">Historia</a>
+        <a href="../conteudo.html">Conteudo</a>
+        <a href="../classes.html">Classes</a>
       </div>
       <div class="actions">
         <button class="primary" onclick="location.href='login.html'">Entrar</button>
@@ -41,11 +41,16 @@
               <input id="ipt_senha" type="password" class="input" required placeholder="Sua senha" oninput="verificarForca()">
               <button type="button" class="botao-olho" onclick="alternarSenha('ipt_senha', this)">Mostrar</button>
             </div>
-
+            <label>Confirme sua senha</label>
+            <div class="campo-senha">
+              <input id="ipt_confirmar_senha" type="password" class="input" required placeholder="Confirme a senha">
+              <button type="button" class="botao-olho" onclick="alternarSenha('ipt_confirmar_senha', this)">Mostrar</button>
+            </div>
             <div class="forca-barra">
               <div class="forca-preenchimento" id="forca_barra"></div>
             </div>
             <p class="forca-texto" id="forca_texto"></p>
+            <p id="msg_erro" class="error-text" style="display:none"></p>
             <button type="button" onclick="cadastrar()" class="primary" style="width:100%;">Cadastrar</button>
           </form>
           <p class="note" style="margin-top:12px; text-align:center;">
@@ -66,90 +71,108 @@
   <script>
     function alternarSenha(idCampo, botao) {
       const campo = document.getElementById(idCampo);
-      if (!campo) return;
       if (campo.type === 'password') {
         campo.type = 'text';
-        if (botao) botao.textContent = 'Ocultar';
+        botao.textContent = 'Ocultar';
       } else {
         campo.type = 'password';
-        if (botao) botao.textContent = 'Mostrar';
+        botao.textContent = 'Mostrar';
       }
     }
 
+    function showError(message) {
+      const msg = document.getElementById('msg_erro');
+      msg.innerHTML = message;
+      msg.style.display = 'block'
+    }
+
+    function clearError() {
+      const msg = document.getElementById('msg_erro');
+      msg.innerHTML = ''
+      msg.style.display = 'none'
+    }
+
     function avaliarSenha(senha) {
-      senha = senha || '';
-      let pontos = 0;
-      let faltando = [];
+      senha = senha || ''
+      let pontos = 0
+      let faltando = []
 
       if (senha.length >= 8) { pontos++; } else { faltando.push('8 caracteres'); }
       if (/[a-z]/.test(senha) && /[A-Z]/.test(senha)) { pontos++; } else { faltando.push('maiúscula e minúscula'); }
       if (/[0-9]/.test(senha)) { pontos++; } else { faltando.push('número'); }
-      if (/[^A-Za-z0-9]/.test(senha)) { pontos++; } else { faltando.push('símbolo (ex: @ # !)'); }
+      if (/[^A-Za-z0-9]/.test(senha)) { pontos++; } else { faltando.push('símbolo'); }
 
       let nivel;
       if (senha.length < 6 || pontos <= 1) {
-        nivel = 'fraca';
+        nivel = 'fraca'
       } else if (pontos <= 3) {
-        nivel = 'média';
+        nivel = 'média'
       } else {
-        nivel = 'forte';
+        nivel = 'forte'
       }
 
-      return { nivel: nivel, faltando: faltando };
+      return { nivel: nivel, faltando: faltando }
     }
 
     function verificarForca() {
-      const senhaEl = document.getElementById('ipt_senha');
-      const barra = document.getElementById('forca_barra');
-      const texto = document.getElementById('forca_texto');
-      if (!senhaEl || !barra || !texto) return;
+      const senhaEl = document.getElementById('ipt_senha')
+      const barra = document.getElementById('forca_barra')
+      const texto = document.getElementById('forca_texto')
+      if (!senhaEl || !barra || !texto) return
 
-      const senha = senhaEl.value;
+      const senha = senhaEl.value
       if (!senha) {
-        barra.style.width = '0';
-        texto.textContent = '';
+        barra.style.width = '0'
+        texto.textContent = ''
         return;
       }
 
-      const resultado = avaliarSenha(senha);
+      const resultado = avaliarSenha(senha)
 
       if (resultado.nivel === 'fraca') {
-        barra.style.width = '33%';
-        barra.style.background = '#e53935';
+        barra.style.width = '33%'
+        barra.style.background = '#e53935'
       } else if (resultado.nivel === 'média') {
-        barra.style.width = '66%';
-        barra.style.background = '#fbc02d';
+        barra.style.width = '66%'
+        barra.style.background = '#fbc02d'
       } else {
-        barra.style.width = '100%';
-        barra.style.background = '#07B875';
+        barra.style.width = '100%'
+        barra.style.background = '#07B875'
       }
 
       texto.textContent = 'Senha ' + resultado.nivel;
       if (resultado.faltando.length > 0) {
-        texto.textContent += ' — falta: ' + resultado.faltando.join(', ');
+        texto.textContent += ' — falta: ' + resultado.faltando.join(', ')
       }
     }
 
     function cadastrar() {
-      const nomeVar = document.getElementById('ipt_nome')?.value || '';
-      const emailVar = document.getElementById('ipt_email')?.value || '';
-      const senhaVar = document.getElementById('ipt_senha')?.value || '';
-      if (!nomeVar || !emailVar || !senhaVar ) {
-        if (typeof cardErro !== 'undefined' && typeof mensagem_erro !== 'undefined') {
-          cardErro.style.display = 'block';
-          mensagem_erro.innerHTML = '(Mensagem de erro para todos os campos em branco)';
-        } else {
-          alert('Preencha todos os campos.');
-        }
-        return false;} 
+      let nomeVar = (ipt_nome.value).trim()
+      let emailVar = (ipt_email.value).trim()
+      let senhaVar = ipt_senha.value
+      let confirmaVar = ipt_confirmar_senha.value
+      
+      clearError();
+      if (!nomeVar || !emailVar || !senhaVar || !confirmaVar) {
+          showError('Preencha todos os campos.')
+          return false
+        } 
 
       if (!emailVar.includes('@') || !emailVar.includes('.')) {
-        alert('Digite um e-mail válido.');
-        return false;
+        showError('Digite um e-mail válido.')
+        return false
       }
 
       if (avaliarSenha(senhaVar).nivel === 'fraca') {
-        alert('Sua senha está fraca. Use pelo menos 8 caracteres, com letras maiúsculas e minúsculas, número e símbolo.');
+        showError('Sua senha está fraca. Use pelo menos 8 caracteres, com letras maiúsculas e minúsculas, número e símbolo.');
+        return false
+      }
+
+      if (senhaVar !== confirmaVar) {
+        const msg = document.getElementById('msg_erro')
+        msg.innerHTML = 'As senhas não coincidem.' 
+        msg.style.display = 'block'
+        document.getElementById('ipt_confirmar_senha')
         return false;
       }
 
@@ -173,10 +196,14 @@
 
           setTimeout(() => { window.location = 'login.html'; }, 2000);
 
+        } else {
+          // tenta mostrar mensagem do servidor
+          resposta.text().then(texto => showError(texto || 'Erro ao realizar cadastro.'))
         }
       })
       .catch(function (resposta) {
         console.log('#ERRO: ' + resposta);
+        showError('Erro ao conectar com o servidor.');
         finalizarAguardar?.();
       });
 

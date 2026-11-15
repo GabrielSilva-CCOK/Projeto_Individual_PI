@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Classes — Tales of Azeroth</title>
+    <link rel="stylesheet" href="css/site.css">
+  </head>
+<body>
+  <header>
+    <nav class="wrap">
+      <a class="logo" href="index.html"><img width = 100px src="assets\logo.png"></a>
+      <div class="links">
+        <a href="index.html">Pagina Inicial</a>
+        <a href="jornada.html">Minha jornada</a>
+        <a href="historia.html">Historia</a>
+        <a href="conteudo.html">Conteúdo</a>
+        <a href="classes.html">Classes</a>
+      </div>
+      <div class="actions">
+        <button onclick="window.location.href='cadastro/login.html'">Entrar</button>
+        <button class="primary" onclick="window.location.href='cadastro/cadastro.html'">Criar conta</button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="wrap">
+      <div class="box classes-box">
+        <h2>Classes de World of Warcraft</h2>
+        <p class="note">Escolha seu papel e sua classe. Cada classe pode desempenhar uma ou mais das tres funcoes abaixo.</p>
+
+        <h3 style="margin-top:24px;">Papeis (Roles)</h3>
+        <div class="grid roles-overview" style="margin-bottom:24px;">
+          <div class="card card-link pad">
+            <img src="assets/dps.jpg" alt="DPS">
+            <h3>DPS</h3>
+            <p>Dano por segundo. Foca em derrotar inimigos rapidamente.</p>
+          </div>
+          <div class="card card-link pad">
+            <img src="assets/tank.jpg" alt="Tank">
+            <h3>Tank</h3>
+            <p>Atrai o ataque dos inimigos e protege o grupo.</p>
+          </div>
+          <div class="card card-link pad">
+            <img src="assets/healer.jpg" alt="Healer">
+            <h3>Healer</h3>
+            <p>Cura aliados e mantem o grupo vivo durante os combates.</p>
+          </div>
+        </div>
+
+        <h3 style="margin-top:24px;">Classes</h3>
+        <div class="grid" id="classes-grid">
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <span>Tales of Azeroth — Classes</span>
+      <span>Projeto academico independente.</span>
+    </div>
+  </footer>
+
+  <script>
+    const classesData = [
+      {
+        id: 'warrior',
+        name: 'Guerreiro',
+        image: 'assets/warrior.jpg',
+        roles: 'Tank, DPS',
+        desc: 'Mestre em armas corpo a corpo, o Guerreiro pode tankar com armadura pesada ou causar dano intenso com espadas e machados.'
+      },
+      {
+        id: 'paladin',
+        name: 'Paladino',
+        image: 'assets/paladin.jpg',
+        roles: 'Tank, Healer, DPS',
+        desc: 'Guerreiro sagrado que protege aliados, cura ferimentos e ataca inimigos com a Luz divina.'
+      },
+      {
+        id: 'hunter',
+        name: 'Caçador',
+        image: 'assets/hunter.jpg',
+        roles: 'DPS',
+        desc: 'Atirador preciso que luta com arcos e armas de fogo, acompanhado por um animal de estimação.'
+      },
+      {
+        id: 'rogue',
+        name: 'Ladino',
+        image: 'assets/rogue.jpg',
+        roles: 'DPS',
+        desc: 'Especialista em furtividade e golpes criticos, ataca pelas sombras e desaparece apos o combate.'
+      },
+      {
+        id: 'priest',
+        name: 'Sacerdote',
+        image: 'assets/priest.png',
+        roles: 'Healer, DPS',
+        desc: 'Mestre da Luz e das Sombras, cura aliados ou causa dano com poderes mentais.'
+      },
+      {
+        id: 'deathknight',
+        name: 'Cavaleiro da Morte',
+        image: 'assets/deathKnight.jpg',
+        roles: 'Tank, DPS',
+        desc: 'Guerreiro morto-vivo que comanda doenças de sangue e gelo, capaz de tankar ou causar dano macabro.'
+      },
+      {
+        id: 'shaman',
+        name: 'Xamã',
+        image: 'assets/shaman.jpeg',
+        roles: 'Healer, DPS',
+        desc: 'Lider espiritual que canaliza elementos da natureza para curar, causar dano ou fortalecer o grupo.'
+      },
+      {
+        id: 'mage',
+        name: 'Mago',
+        image: 'assets/mage.jpg',
+        roles: 'DPS',
+        desc: 'Conjurador de feitiços arcano, fogo e gelo que causa dano em area e controla o campo de batalha.'
+      },
+      {
+        id: 'warlock',
+        name: 'Bruxo',
+        image: 'assets/warlock.png',
+        roles: 'DPS',
+        desc: 'Usa magia vil para invocar demonios, aplicar maldições e drenar a vida dos inimigos.'
+      },
+      {
+        id: 'monk',
+        name: 'Monge',
+        image: 'assets/monk.jpg',
+        roles: 'Tank, Healer, DPS',
+        desc: 'Mestre de artes marciais e energia, pode tankar, curar ou causar dano com golpes rapidos.'
+      },
+      {
+        id: 'druid',
+        name: 'Druida',
+        image: 'assets/druid.jpg',
+        roles: 'Tank, Healer, DPS',
+        desc: 'Transforma-se em animais para tankar, curar ou causar dano.'
+      },
+      {
+        id: 'demonhunter',
+        name: 'Caçador de Demônios',
+        image: 'assets/demonHunter.jpg',
+        roles: 'Tank, DPS',
+        desc: 'Caçador imbuido de energia vil, salto-duplo e lamina demoniaca, focado em mobilidade e dano.'
+      },
+      {
+        id: 'evoker',
+        name: 'Evocador',
+        image: 'assets/evoker.jpg',
+        roles: 'Healer, DPS',
+        desc: 'Dragneo que canaliza magias das 5 linhagens draconixas, capaz de curar e causar dano elemental poderoso.'
+      }
+    ];
+
+    const grid = document.getElementById('classes-grid');
+
+    classesData.forEach(c => {
+      const card = document.createElement('div');
+      card.className = 'card pad';
+
+      const roleImages = {
+        Tank: 'assets/tank_icon.png',
+        DPS: 'assets/dps_icon.png',
+        Healer: 'assets/healer_icon.png'
+      };
+      const rolesList = c.roles.split(',').map(r => r.trim());
+      const iconsHtml = rolesList.map(r => {
+        const src = roleImages[r];
+        return src ? `<img src="${src}" alt="${r}" class="role-icon" title="${r}">` : '';
+      }).join('');
+
+      card.innerHTML = `
+        <img src="${c.image}" alt="${c.name}">
+        <div class="roles-icons">${iconsHtml}</div>
+        <h3>${c.name}</h3>
+        <p class="muted">${c.roles}</p>
+        <div class="expanded">${c.desc}</div>
+      `;
+
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', () => {
+        const currentlyOpen = document.querySelectorAll('#classes-grid .card.open');
+        currentlyOpen.forEach(el => { if (el !== card) el.classList.remove('open'); });
+        card.classList.toggle('open');
+      });
+
+      grid.appendChild(card);
+    });
+  </script>
+</body>
+</html>

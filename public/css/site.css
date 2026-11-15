@@ -159,6 +159,8 @@ section {
 .faction-img {
   width: 100%;
   height: 160px;
+  border-radius: 7px;
+  border: #d6b36a solid;
   object-fit: cover;
   display: block;
 }
@@ -171,13 +173,20 @@ section {
   border-radius: 7px;
   overflow: hidden;
 }
+.card:hover{
+  background: rgba(214,179,106,0.2);
+  transition: background 0.2s;
+}
 
 .card img {
   width: 100%;
-  height: 175px;
+  height: 180px; /* fixed height for uniform cards */
   object-fit: cover;
   display: block;
 }
+
+/* framed border for card images (matches .art) */
+.card img { border-radius: 7px; border: 3px solid var(--gold); }
 
 .pad {
   padding: 20px;
@@ -224,8 +233,25 @@ section {
 .art {
   height: 340px;
   border-radius: 7px;
+  border: #d6b36a solid;
   background: linear-gradient(#0002, #0008),
     url('../assets/img1.jpg')
+    center/cover;
+}
+.raid {
+  height: 340px;
+  border-radius: 7px;
+  border: #d6b36a solid;
+  background: linear-gradient(#0002, #0008),
+    url('../assets/Raid.jpg')
+    center/cover;
+}
+.grupo {
+  height: 340px;
+  border-radius: 7px;
+  border: #d6b36a solid;
+  background: linear-gradient(#0002, #0008),
+    url('../assets/grupo.png')
     center/cover;
 }
 
@@ -354,7 +380,7 @@ footer {
 .box input {
   width: 100%;
   padding: 11px;
-  margin: 6px 0 14px;
+  margin: 6px 0 6px;
   background: var(--bg);
   color: white;
   border: 1px solid var(--line);
@@ -375,6 +401,14 @@ footer {
 .note {
   font-size: 12px;
   color: var(--muted);
+}
+
+/* inline error text for forms */
+.error-text {
+  color: #e53935;
+  font-size: 13px;
+  margin-top: 6px;
+  font-weight: 700;
 }
 
 /* Responsivo */
@@ -411,10 +445,59 @@ footer {
   }
 }
 
+/* role icons (small round badges under class cards) */
+.roles-icons {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+.card .role-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--gold);
+  background: var(--bg);
+  display: block;
+}
+/* enforce small icon sizing and square aspect even if other rules exist */
+.roles-icons img, .roles-icons .role-icon {
+  width: 30px ;
+  height: 30px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  object-fit: cover;
+  display: inline-block;
+}
+
+.classes-box { width:100%; max-width:none; padding:28px; }
+.roles-overview .grid { gap: 16px; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); }
+#classes-grid.grid { gap: 18px; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); }
+.roles-overview .card img { height: 180px; object-fit: cover; }
+.card { display:flex; flex-direction:column; justify-content:flex-start; transition:transform .18s ease, box-shadow .18s ease; box-shadow:none; transform:none; }
+.card:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(0,0,0,0.45); }
+.roles-overview .card { cursor: default; transform: none; box-shadow: none; }
+.roles-overview .card:hover { transform: none; box-shadow: none; }
+/* ensure the top role cards remain static on hover (override generic .card:hover) */
+.roles-overview .card:hover {
+  background: none !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+/* removed duplicate thin bottom border so framed border above applies uniformly */
+.roles-icons { margin-top:8px; display:flex; justify-content:center; gap:6px; }
+.expanded { max-height:0; overflow:hidden; transition: max-height .28s ease, opacity .2s ease; opacity:0; margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:14px;color:#f4f1e9; }
+.card.open .expanded { max-height:240px; opacity:1; }
+.card h3 { margin-top:12px; margin-bottom:6px; }
+.card p { margin:0 0 8px 0; color:var(--muted); }
+
 /* Password strength and show-password UI (for cadastro/login forms) */
 .campo-senha {
   position: relative;
   width: 100%;
+  display: flex;
+  align-items: center;
 }
 .campo-senha input {
   padding-right: 90px;
@@ -434,6 +517,11 @@ footer {
   border-radius: 999px;
   cursor: pointer;
   transition: background 0.2s;
+  /* garantir centralização e tamanho compatível com o input */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
 }
 .botao-olho:hover {
   background: rgba(214,179,106,0.2);

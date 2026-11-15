@@ -1,9 +1,4 @@
-/* =========================================================
-   TALES OF AZEROTH - ESTILOS DA DASHBOARD
-   Organização: variáveis, estrutura, componentes e responsividade
-   ========================================================= */
 
-/* 1. Variáveis globais */
 :root {
     --bg: #0b0e12;
     --panel: rgba(21, 27, 34, 0.94);
