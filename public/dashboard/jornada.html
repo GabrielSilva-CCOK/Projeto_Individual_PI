@@ -1,82 +1,86 @@
 <!doctype html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Dashboard | Tales of Azeroth</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Alegreya+Sans:wght@400;500;700&display=swap">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Alegreya+Sans:wght@400;500;700&display=swap">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="../css/site.css">
 </head>
-<body onload = "VerificarLogado()">
-<div class="app">
-  <header id = "Header">
-  </header>
-  <header class="top">
-    <div class="brand">
-      <h1>Dashboard da comunidade</h1>
-      <p>Pesquisa com jogadores de World of Warcraft</p>
-    </div>
-    <nav class="tabs" aria-label="Dashboards">
-      <a class="tab" href="panorama.html">Panorama de Azeroth</a>
-      <a class="tab" href="jornada.html" aria-current="page">Jornada dos Aventureiros</a>
-    </nav>
-  </header>
 
-  <section class="kpis" aria-label="Indicadores">
-    <div class="panel">
-      <div class="kl">Média de anos jogando</div>
-      <div class="kv" id="k1v">— <small id="k1sub"></small></div>
-      <div class="ks"><span id="k1c" class="chip">—</span><span id="k1s"></span></div>
-    </div>
-    <div class="panel">
-      <div class="kl">Média de personagens</div>
-      <div class="kv" id="k2v">— <small id="k2sub"></small></div>
-      <div class="ks"><span id="k2c" class="chip">—</span><span id="k2s"></span></div>
-    </div>
-    <div class="panel">
-      <div class="kl">Índice de atividade</div>
-      <div class="kv" id="k3v">— <small id="k3sub"></small></div>
-      <div class="ks"><span id="k3c" class="chip">—</span><span id="k3s"></span></div>
-    </div>
-    <div class="panel">
-      <div class="kl">Taxa de veteranos</div>
-      <div class="kv" id="k4v">— <small id="k4sub"></small></div>
-      <div class="ks"><span id="k4c" class="chip">—</span><span id="k4s"></span></div>
-    </div>
-  </section>
+<body onload="VerificarLogado()">
+  <div class="app">
+    <header id="Header">
+    </header>
+    <header class="top">
+      <div class="brand">
+        <h1>Dashboard da comunidade</h1>
+        <p>Pesquisa com jogadores de World of Warcraft</p>
+      </div>
+      <nav class="tabs" aria-label="Dashboards">
+        <a class="tab" href="panorama.html">Panorama de Azeroth</a>
+        <a class="tab" href="jornada.html" aria-current="page">Jornada dos Aventureiros</a>
+      </nav>
+    </header>
 
-  <main class="main g-jornada">
-    <section class="panel">
-      <h3>Frequência de jogo</h3>
-      <p class="sub">Com que frequência você joga</p>
-      <div class="chart-box"><canvas id="c-freq" role="img" aria-label="Frequência de jogo"></canvas></div>
-    </section>
-    <section class="panel">
-      <h3>Conteúdo PvE</h3>
-      <p class="sub">Qual conteúdo PvE você prefere</p>
-      <div class="chart-box"><canvas id="c-pve" role="img" aria-label="Conteúdo PvE preferido"></canvas></div>
-    </section>
-    <section class="panel">
-      <h3>Anos de experiência</h3>
-      <p class="sub">Quantos anos você joga · % dos jogadores por faixa</p>
-      <div class="chart-box"><canvas id="c-anos" role="img" aria-label="Distribuição de anos de jogo"></canvas></div>
-    </section>
-    <section class="panel">
-      <h3>Personagens</h3>
-      <p class="sub">Quantos personagens você possui · % dos jogadores por faixa</p>
-      <div class="chart-box"><canvas id="c-chars" role="img" aria-label="Distribuição de quantidade de personagens"></canvas></div>
+    <section class="kpis" aria-label="Indicadores">
+      <div class="panel">
+        <div class="kl">Média de anos jogando</div>
+        <div class="kv" id="k1v">— <small id="k1sub"></small></div>
+        <div class="ks"><span id="k1c" class="chip">—</span><span id="k1s"></span></div>
+      </div>
+      <div class="panel">
+        <div class="kl">Média de personagens</div>
+        <div class="kv" id="k2v">— <small id="k2sub"></small></div>
+        <div class="ks"><span id="k2c" class="chip">—</span><span id="k2s"></span></div>
+      </div>
+      <div class="panel">
+        <div class="kl">Índice de atividade</div>
+        <div class="kv" id="k3v">— <small id="k3sub"></small></div>
+        <div class="ks"><span id="k3c" class="chip">—</span><span id="k3s"></span></div>
+      </div>
+      <div class="panel">
+        <div class="kl">Taxa de veteranos</div>
+        <div class="kv" id="k4v">— <small id="k4sub"></small></div>
+        <div class="ks"><span id="k4c" class="chip">—</span><span id="k4s"></span></div>
+      </div>
     </section>
 
-    <div class="vazio" id="vazio">
-      <strong>Nenhuma resposta carregada</strong>
-      <span>Carregue o CSV da pesquisa para ver os gráficos.</span>
-      <label class="btn" for="csv">Carregar CSV</label>
-    </div>
-  </main>
-</div>
+    <main class="main g-jornada">
+      <section class="panel">
+        <h3>Frequência de jogo</h3>
+        <p class="sub">Com que frequência você joga</p>
+        <div class="chart-box"><canvas id="c-freq" role="img" aria-label="Frequência de jogo"></canvas></div>
+      </section>
+      <section class="panel">
+        <h3>Conteúdo PvE</h3>
+        <p class="sub">Qual conteúdo PvE você prefere</p>
+        <div class="chart-box"><canvas id="c-pve" role="img" aria-label="Conteúdo PvE preferido"></canvas></div>
+      </section>
+      <section class="panel">
+        <h3>Anos de experiência</h3>
+        <p class="sub">Quantos anos você joga · % dos jogadores por faixa</p>
+        <div class="chart-box"><canvas id="c-anos" role="img" aria-label="Distribuição de anos de jogo"></canvas></div>
+      </section>
+      <section class="panel">
+        <h3>Personagens</h3>
+        <p class="sub">Quantos personagens você possui · % dos jogadores por faixa</p>
+        <div class="chart-box"><canvas id="c-chars" role="img"
+            aria-label="Distribuição de quantidade de personagens"></canvas></div>
+      </section>
+
+      <div class="vazio" id="vazio">
+        <strong>Nenhuma resposta carregada</strong>
+        <span>Carregue o CSV da pesquisa para ver os gráficos.</span>
+        <label class="btn" for="csv">Carregar CSV</label>
+      </div>
+    </main>
+  </div>
 
   <footer>
     <div class="wrap foot">
@@ -85,13 +89,13 @@
     </div>
   </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<script src="sample-data.js"></script>
-<script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="sample-data.js"></script>
+  <script>
     function VerificarLogado() {
-    let loggedUserId = sessionStorage.ID_USUARIO;
-    if (!loggedUserId) {
-      Header.innerHTML = `
+      let loggedUserId = sessionStorage.ID_USUARIO;
+      if (!loggedUserId) {
+        Header.innerHTML = `
         <nav class="wrap">
           <a class="logo" href="#inicio"><img width = 100px src="../assets/logo.png"></a>
             <div class="links">
@@ -112,9 +116,9 @@
           window.location.href = '../index.html';
         }
 
-    }
-    else{
-      Header.innerHTML = `
+      }
+      else {
+        Header.innerHTML = `
         <nav class="wrap">
           <a class="logo" href="#inicio"><img width = 100px src="../assets/logo.png"></a>
             <div class="links">
@@ -130,12 +134,13 @@
           </div>
         </nav>`
 
+      }
     }
-  }
-  function  deslogar(){
-    sessionStorage.clear()
-    window.location.href='../index.html'
-  }
-</script>
+    function deslogar() {
+      sessionStorage.clear()
+      window.location.href = '../index.html'
+    }
+  </script>
 </body>
+
 </html>

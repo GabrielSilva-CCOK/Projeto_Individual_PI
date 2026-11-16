@@ -50,126 +50,141 @@
   </footer>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      let loggedUserId = sessionStorage.ID_USUARIO;
-      let questionsContainer = document.getElementById('questions');
-      let navContainer = document.getElementById('nav');
-      let messageEl = document.getElementById('form-msg');
+    const questionsContainer = document.getElementById('questions');
+    const navContainer = document.getElementById('nav');
+    const message = document.getElementById('form-msg');
 
-      if (!loggedUserId) {
-        if (confirm('Você precisa estar logado para responder ao formulário. Deseja entrar agora?')) {
-          window.location.href = 'cadastro/login.html';
-        } else {
-          window.location.href = 'index.html';
+    let perguntas = [];
+    let respostas = [];
+    let perguntaAtual = 0;
+    const idUsuario = sessionStorage.ID_USUARIO;
+
+    function mostrarMensagem(texto) {
+      message.style.display = 'block';
+      message.textContent = texto;
+    }
+
+    function mostrarPergunta() {
+      const pergunta = perguntas[perguntaAtual];
+      let alternativasHtml = '';
+
+      for (let i = 0; i < pergunta.alternativas.length; i++) {
+        const alternativa = pergunta.alternativas[i];
+        let marcada = '';
+
+        if (respostas[perguntaAtual] == alternativa.idAlternativa) {
+          marcada = 'checked';
         }
+        alternativasHtml += `
+          <div>
+            <input type="radio" name="resposta"
+              id="alternativa${alternativa.idAlternativa}"
+              value="${alternativa.idAlternativa}" ${marcada}>
+            <label for="alternativa${alternativa.idAlternativa}">
+              ${alternativa.titulo}
+            </label>
+          </div>
+        `;
+      }
+
+      questionsContainer.innerHTML = `
+        <fieldset>
+          <legend>${pergunta.enunciado}</legend>
+          ${alternativasHtml}
+          <div class="muted" style="margin-top:10px">
+            Pergunta ${perguntaAtual + 1} de ${perguntas.length}
+          </div>
+        </fieldset>
+      `;
+
+      navContainer.innerHTML = '';
+
+      const botao = document.createElement('button');
+      botao.type = 'button';
+      botao.className = 'primary';
+
+      if (perguntaAtual === perguntas.length - 1) {
+        botao.textContent = 'Enviar respostas';
+      } else {
+        botao.textContent = 'Próxima pergunta';
+      }
+
+      botao.addEventListener('click', avancarFormulario);
+      navContainer.appendChild(botao);
+    }
+
+    function avancarFormulario() {
+      const alternativaEscolhida = document.querySelector(
+        'input[name="resposta"]:checked'
+      );
+
+      if (alternativaEscolhida === null) {
+        mostrarMensagem('Selecione uma alternativa para prosseguir.');
         return;
       }
 
-      fetch('/formulario/perguntas').then(function (res) {
-        if (res.status === 204) return [];
-        return res.json();
-      }).then(function (serverQuestions) {
+      respostas[perguntaAtual] = alternativaEscolhida.value;
+      message.style.display = 'none';
+      if (perguntaAtual < perguntas.length - 1) {
+        perguntaAtual++;
+        mostrarPergunta();
+      } else {
+        enviarRespostas();
+      }
+    }
 
-        let listaQuestoes = [];
-        for (let i = 0; i < serverQuestions.length; i = i + 1) {
-          let p = serverQuestions[i];
-          let alts = [];
-          for (let j = 0; j < p.alternativas.length; j = j + 1) {
-            let a = p.alternativas[j];
-            alts.push({ id: a.idAlternativa, text: a.titulo });
-          }
-          listaQuestoes.push({ id: p.idPergunta, text: p.enunciado, alternativas: alts });
-        }
-
-        let selectedAnswers = [];
-        for (let i = 0; i < listaQuestoes.length; i = i + 1) selectedAnswers.push(null);
-
-        function CarregarPergunta(index) {
-          let q = listaQuestoes[index];
-          let alternativasHtml = '';
-          for (let k = 0; k < q.alternativas.length; k = k + 1) {
-            let a = q.alternativas[k];
-            let checked = selectedAnswers[index] == a.id ? ' checked' : '';
-            alternativasHtml += `<div><input type="radio" name="resposta" id="a${a.id}" value="${a.id}"${checked}><label for="a${a.id}">${a.text}</label></div>`;
-          }
-
-          let html = `<fieldset>
-            <legend>${q.text}</legend>
-            ${alternativasHtml}
-            <div class="muted" style="margin-top:10px">Pergunta ${index + 1} de ${listaQuestoes.length}</div>
-          </fieldset>`;
-
-          questionsContainer.innerHTML = html;
-
-          navContainer.innerHTML = '';
-          let btn = document.createElement('button');
-          btn.type = 'button';
-          btn.className = 'primary';
-          btn.innerText = index === listaQuestoes.length - 1 ? 'Enviar respostas' : 'Próxima pergunta';
-
-          btn.addEventListener('click', function () {
-            let radios = document.getElementsByName('resposta');
-            let chosen = null;
-            for (let r = 0; r < radios.length; r = r + 1) {
-              if (radios[r].checked) { chosen = radios[r].value; break; }
-            }
-            if (!chosen) {
-              messageEl.style.display = 'block';
-              messageEl.textContent = 'Selecione uma alternativa para prosseguir.';
-              return;
-            }
-            messageEl.style.display = 'none';
-            selectedAnswers[index] = chosen;
-
-            if (index < listaQuestoes.length - 1) {
-              CarregarPergunta(index + 1);
-              return;
-            }
-
-            // verificar todas respondidas
-            for (let t = 0; t < selectedAnswers.length; t = t + 1) {
-              if (selectedAnswers[t] == null) {
-                messageEl.style.display = 'block';
-                messageEl.textContent = 'Você precisa responder todas as perguntas antes de enviar.';
-                return;
-              }
-            }
-
-            let pos = 0;
-            function sendNext() {
-              if (pos >= listaQuestoes.length) {
-                messageEl.style.display = 'block';
-                messageEl.textContent = 'Respostas enviadas com sucesso!';
-                setTimeout(function () { window.location.href = 'dashboard/jornada.html'; }, 1200);
-                return;
-              }
-              let qItem = listaQuestoes[pos];
-              let payload = { id_usuario: loggedUserId, id_pergunta: qItem.id, id_alternativa: selectedAnswers[pos] };
-              fetch('/formulario/resposta', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-              }).then(function (r) {
-                if (!r.ok) {
-                  return r.text().then(function (txt) { throw txt; });
-                }
-                pos = pos + 1;
-                sendNext();
-              }).catch(function (err) {
-                console.error(err);
-                messageEl.style.display = 'block';
-                messageEl.textContent = `Erro ao enviar respostas: ${err}`;
-              });
-            }
-            sendNext();
+    async function enviarRespostas() {
+      try {
+        for (let i = 0; i < perguntas.length; i++) {
+          const dadosResposta = {
+            id_usuario: idUsuario,
+            id_pergunta: perguntas[i].idPergunta,
+            id_alternativa: respostas[i]
+          };
+          const respostaServidor = await fetch('/formulario/resposta', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dadosResposta)
           });
-
-          navContainer.appendChild(btn);
+          if (!respostaServidor.ok) {
+            const erro = await respostaServidor.text();
+            throw new Error(erro);
+          }
         }
+        mostrarMensagem('Respostas enviadas com sucesso!');
+        setTimeout(function () {
+          window.location.href = 'dashboard/jornada.html';
+        }, 1200);
+      } catch (erro) {
+        console.error(erro);
+        mostrarMensagem('Erro ao enviar respostas: ' + erro.message);
+      }
+    }
+    async function carregarPerguntas() {
+        const respostaServidor = await fetch('/formulario/perguntas');
+        perguntas = await respostaServidor.json();
+        respostas = [];
+        for (let i = 0; i < perguntas.length; i++) {
+          respostas.push(null);
+        }
+        mostrarPergunta();
+    }
 
-        CarregarPergunta(0);
-      })
-    });
+    if (!idUsuario) {
+      const desejaEntrar = confirm(
+        'Você precisa estar logado para responder ao formulário. Deseja entrar agora?'
+      );
+
+      if (desejaEntrar) {
+        window.location.href = 'cadastro/login.html';
+      } else {
+        window.location.href = 'index.html';
+      }
+    } else {
+      carregarPerguntas();
+    }
   </script>
 </body>
 </html>
