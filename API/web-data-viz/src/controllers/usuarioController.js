@@ -14,16 +14,13 @@ function autenticar(req, res) {
             .then(
                 function (resultadoAutenticar) {
                     console.log(`\nResultados encontrados: ${resultadoAutenticar.length}`);
-                    console.log(`Resultados: ${JSON.stringify(resultadoAutenticar)}`); // transforma JSON em String
-
+                    console.log(`Resultados: ${JSON.stringify(resultadoAutenticar)}`); 
                     if (resultadoAutenticar.length == 1) {
                         console.log(resultadoAutenticar);
-                        // Retorna informações do usuário. Não há vínculo com empresas.
                         res.json({
                             id: resultadoAutenticar[0].id,
                             email: resultadoAutenticar[0].email,
-                            nome: resultadoAutenticar[0].nome,
-                            aquarios: []
+                            nome: resultadoAutenticar[0].nome
                         });
                     } else if (resultadoAutenticar.length == 0) {
                         res.status(403).send("Email e/ou senha inválido(s)");
@@ -44,11 +41,9 @@ function autenticar(req, res) {
 
 function cadastrar(req, res) {
     console.log('REQ.BODY cadastrar ->', req.body);
-    // Crie uma variável que vá recuperar os valores do arquivo cadastro.html
     var nome = req.body.nomeServer;
     var email = req.body.emailServer;
     var senha = req.body.senhaServer;
-    // não usamos vínculo com empresas; ignora campos relacionados
 
     // Faça as validações dos valores
     if (nome == undefined) {

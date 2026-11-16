@@ -50,7 +50,7 @@
   </footer>
 
   <script>
-    const classesData = [
+    let classesData = [
       {
         id: 'warrior',
         name: 'Guerreiro',
@@ -144,40 +144,77 @@
       }
     ];
 
-    const grid = document.getElementById('classes-grid');
+    let grid = document.getElementById('classes-grid');
 
-    classesData.forEach(c => {
-      const card = document.createElement('div');
+    let roleImages = {
+      Tank: 'assets/tank_icon.png',
+      DPS: 'assets/dps_icon.png',
+      Healer: 'assets/healer_icon.png'
+    };
+
+    for (let i = 0; i < classesData.length; i++) {
+      let c = classesData[i];
+
+      let card = document.createElement('div');
       card.className = 'card pad interactive';
 
-      const roleImages = {
-        Tank: 'assets/tank_icon.png',
-        DPS: 'assets/dps_icon.png',
-        Healer: 'assets/healer_icon.png'
-      };
-      const rolesList = c.roles.split(',').map(r => r.trim());
-      const iconsHtml = rolesList.map(r => {
-        const src = roleImages[r];
-        return src ? `<img src="${src}" alt="${r}" class="role-icon" title="${r}">` : '';
-      }).join('');
+      // imagem principal
+      let img = document.createElement('img');
+      img.src = c.image;
+      img.alt = c.name;
+      card.appendChild(img);
 
-      card.innerHTML = `
-        <img src="${c.image}" alt="${c.name}">
-        <div class="roles-icons">${iconsHtml}</div>
-        <h3>${c.name}</h3>
-        <p class="muted">${c.roles}</p>
-        <div class="expanded">${c.desc}</div>
-      `;
+      // ícones de função (roles)
+      let rolesContainer = document.createElement('div');
+      rolesContainer.className = 'roles-icons';
+      let rolesParts = c.roles.split(',');
+      for (let j = 0; j < rolesParts.length; j++) {
+        let roleName = rolesParts[j].trim();
+        let iconSrc = roleImages[roleName];
+        if (iconSrc) {
+          let icon = document.createElement('img');
+          icon.src = iconSrc;
+          icon.alt = roleName;
+          icon.className = 'role-icon';
+          icon.title = roleName;
+          rolesContainer.appendChild(icon);
+        }
+      }
+      card.appendChild(rolesContainer);
+
+      // nome e texto
+      let title = document.createElement('h3');
+      title.innerText = c.name;
+      card.appendChild(title);
+
+      let rolesText = document.createElement('p');
+      rolesText.className = 'muted';
+      rolesText.innerText = c.roles;
+      card.appendChild(rolesText);
+
+      let expanded = document.createElement('div');
+      expanded.className = 'expanded';
+      expanded.innerText = c.desc;
+      card.appendChild(expanded);
 
       card.style.cursor = 'pointer';
-      card.addEventListener('click', () => {
-        const currentlyOpen = document.querySelectorAll('#classes-grid .card.open');
-        currentlyOpen.forEach(el => { if (el !== card) el.classList.remove('open'); });
-        card.classList.toggle('open');
+      card.addEventListener('click', function () {
+        let currentlyOpen = document.querySelectorAll('#classes-grid .card.open');
+        for (let k = 0; k < currentlyOpen.length; k = k + 1) {
+          let el = currentlyOpen[k];
+          if (el !== card) {
+            el.classList.remove('open');
+          }
+        }
+        if (card.classList.contains('open')) {
+          card.classList.remove('open');
+        } else {
+          card.classList.add('open');
+        }
       });
 
       grid.appendChild(card);
-    });
+    }
 
         function VerificarLogado() {
     let loggedUserId = sessionStorage.ID_USUARIO;

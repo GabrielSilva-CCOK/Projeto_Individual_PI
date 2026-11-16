@@ -51,9 +51,10 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const loggedUserId = sessionStorage.ID_USUARIO;
-      const questionsContainerEl = document.getElementById('questions');
-      const messageEl = document.getElementById('form-msg');
+      let loggedUserId = sessionStorage.ID_USUARIO;
+      let questionsContainer = document.getElementById('questions');
+      let navContainer = document.getElementById('nav');
+      let messageEl = document.getElementById('form-msg');
 
       if (!loggedUserId) {
         if (confirm('Você precisa estar logado para responder ao formulário. Deseja entrar agora?')) {
@@ -64,101 +65,110 @@
         return;
       }
 
-      fetch('/formulario/perguntas')
-        .then(res => (res.status === 204 ? [] : res.json()))
-        .then(serverQuestions => {
-          if (!serverQuestions || serverQuestions.length === 0) {
-            questionsContainerEl.innerHTML = '<p class="muted">Nenhuma pergunta disponível.</p>';
-            return;
+      fetch('/formulario/perguntas').then(function (res) {
+        if (res.status === 204) return [];
+        return res.json();
+      }).then(function (serverQuestions) {
+
+        let listaQuestoes = [];
+        for (let i = 0; i < serverQuestions.length; i = i + 1) {
+          let p = serverQuestions[i];
+          let alts = [];
+          for (let j = 0; j < p.alternativas.length; j = j + 1) {
+            let a = p.alternativas[j];
+            alts.push({ id: a.idAlternativa, text: a.titulo });
+          }
+          listaQuestoes.push({ id: p.idPergunta, text: p.enunciado, alternativas: alts });
+        }
+
+        let selectedAnswers = [];
+        for (let i = 0; i < listaQuestoes.length; i = i + 1) selectedAnswers.push(null);
+
+        function CarregarPergunta(index) {
+          let q = listaQuestoes[index];
+          let alternativasHtml = '';
+          for (let k = 0; k < q.alternativas.length; k = k + 1) {
+            let a = q.alternativas[k];
+            let checked = selectedAnswers[index] == a.id ? ' checked' : '';
+            alternativasHtml += `<div><input type="radio" name="resposta" id="a${a.id}" value="${a.id}"${checked}><label for="a${a.id}">${a.text}</label></div>`;
           }
 
-          // montar array de perguntas de forma simples
-          const questionsList = serverQuestions.map(p => ({
-            id: p.idPergunta,
-            text: p.enunciado,
-            alternatives: p.alternativas.map(a => ({ id: a.idAlternativa, text: a.titulo }))
-          }));
+          let html = `<fieldset>
+            <legend>${q.text}</legend>
+            ${alternativasHtml}
+            <div class="muted" style="margin-top:10px">Pergunta ${index + 1} de ${listaQuestoes.length}</div>
+          </fieldset>`;
 
-          const selectedAnswers = new Array(questionsList.length).fill(null);
-          const navContainerEl = document.getElementById('nav');
+          questionsContainer.innerHTML = html;
 
-          function showQuestion(index) {
-            const q = questionsList[index];
-            questionsContainerEl.innerHTML = `
-              <fieldset>
-                <legend>${q.text}</legend>
-                ${q.alternatives.map(a => `
-                  <div>
-                    <input type="radio" name="resposta" id="a${a.id}" value="${a.id}" ${selectedAnswers[index] == a.id ? 'checked' : ''}>
-                    <label for="a${a.id}">${a.text}</label>
-                  </div>
-                `).join('')}
-                <div class="muted" style="margin-top:10px">Pergunta ${index + 1} de ${questionsList.length}</div>
-              </fieldset>
-            `;
+          navContainer.innerHTML = '';
+          let btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'primary';
+          btn.innerText = index === listaQuestoes.length - 1 ? 'Enviar respostas' : 'Próxima pergunta';
 
-            navContainerEl.innerHTML = '';
-            const actionButton = document.createElement('button');
-            actionButton.type = 'button';
-            actionButton.className = 'primary';
-            actionButton.textContent = index === questionsList.length - 1 ? 'Enviar respostas' : 'Próxima pergunta';
-            actionButton.addEventListener('click', () => {
-              const selectedOption = questionsContainerEl.querySelector('input[type="radio"]:checked');
-              if (!selectedOption) {
+          btn.addEventListener('click', function () {
+            let radios = document.getElementsByName('resposta');
+            let chosen = null;
+            for (let r = 0; r < radios.length; r = r + 1) {
+              if (radios[r].checked) { chosen = radios[r].value; break; }
+            }
+            if (!chosen) {
+              messageEl.style.display = 'block';
+              messageEl.textContent = 'Selecione uma alternativa para prosseguir.';
+              return;
+            }
+            messageEl.style.display = 'none';
+            selectedAnswers[index] = chosen;
+
+            if (index < listaQuestoes.length - 1) {
+              CarregarPergunta(index + 1);
+              return;
+            }
+
+            // verificar todas respondidas
+            for (let t = 0; t < selectedAnswers.length; t = t + 1) {
+              if (selectedAnswers[t] == null) {
                 messageEl.style.display = 'block';
-                messageEl.textContent = 'Selecione uma alternativa para prosseguir.';
+                messageEl.textContent = 'Você precisa responder todas as perguntas antes de enviar.';
                 return;
               }
-              messageEl.style.display = 'none';
-              selectedAnswers[index] = selectedOption.value;
+            }
 
-              if (index < questionsList.length - 1) {
-                showQuestion(index + 1);
-              } else {
-                // verificar todas respondidas
-                if (selectedAnswers.some(r => r == null)) {
-                  messageEl.style.display = 'block';
-                  messageEl.textContent = 'Você precisa responder todas as perguntas antes de enviar.';
-                  return;
-                }
-
-                // enviar respostas (uma requisição por pergunta)
-                const requests = questionsList.map((qItem, pos) => {
-                  return fetch('/formulario/resposta', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                      id_usuario: loggedUserId,
-                      id_pergunta: qItem.id,
-                      id_alternativa: selectedAnswers[pos]
-                    })
-                  }).then(res => {
-                    if (!res.ok) return res.text().then(t => Promise.reject(t));
-                    return res.json();
-                  });
-                });
-
-                Promise.all(requests).then(() => {
-                  messageEl.style.display = 'block';
-                  messageEl.textContent = 'Respostas enviadas com sucesso!';
-                  setTimeout(() => { window.location.href = 'dashboard/panorama.html'; }, 1200);
-                }).catch(err => {
-                  console.error(err);
-                  messageEl.style.display = 'block';
-                  messageEl.textContent = 'Erro ao enviar respostas: ' + err;
-                });
+            let pos = 0;
+            function sendNext() {
+              if (pos >= listaQuestoes.length) {
+                messageEl.style.display = 'block';
+                messageEl.textContent = 'Respostas enviadas com sucesso!';
+                setTimeout(function () { window.location.href = 'dashboard/jornada.html'; }, 1200);
+                return;
               }
-            });
-            navContainerEl.appendChild(actionButton);
-          }
+              let qItem = listaQuestoes[pos];
+              let payload = { id_usuario: loggedUserId, id_pergunta: qItem.id, id_alternativa: selectedAnswers[pos] };
+              fetch('/formulario/resposta', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+              }).then(function (r) {
+                if (!r.ok) {
+                  return r.text().then(function (txt) { throw txt; });
+                }
+                pos = pos + 1;
+                sendNext();
+              }).catch(function (err) {
+                console.error(err);
+                messageEl.style.display = 'block';
+                messageEl.textContent = `Erro ao enviar respostas: ${err}`;
+              });
+            }
+            sendNext();
+          });
 
-          showQuestion(0);
-        })
-        .catch(err => {
-          console.error(err);
-          messageEl.style.display = 'block';
-          messageEl.textContent = 'Erro ao carregar perguntas.';
-        });
+          navContainer.appendChild(btn);
+        }
+
+        CarregarPergunta(0);
+      })
     });
   </script>
 </body>

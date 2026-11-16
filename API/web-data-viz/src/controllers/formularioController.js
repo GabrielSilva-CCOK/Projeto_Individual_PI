@@ -8,15 +8,13 @@ function puxarPergunta(req, res) {
     }
 
     formularioModel.puxarPergunta(questionId).then(function (resultado) {
-        if (resultado.length > 0) {
+        {
             const alternativas = resultado.map(row => ({ idAlternativa: row.idAlternativa, titulo: row.titulo }));
             res.status(200).json({
                 idPergunta: resultado[0].idPergunta,
                 enunciado: resultado[0].enunciado,
                 alternativas: alternativas
             });
-        } else {
-            res.status(204).send("Nenhum resultado encontrado!");
         }
     }).catch(function (erro) {
         console.log(erro);
