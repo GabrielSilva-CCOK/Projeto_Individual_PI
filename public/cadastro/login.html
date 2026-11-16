@@ -1,28 +1,16 @@
 <!doctype html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Entrar — Azeroth</title>
   <link rel="stylesheet" href="../css/site.css">
 </head>
-<body>
-  <header>
-    <nav class="wrap">
-      <a class="logo" href="../index.html"><img width = 100px src="../assets\logo.png"></a>
-      <div class="links">
-        <a href="../index.html">Pagina Inicial</a>
-        <a href="../jornada.html">Minha jornada</a>
-        <a href="../historia.html">Historia</a>
-        <a href="../conteudo.html">Conteudo</a>
-        <a href="../classes.html">Classes</a>
-      </div>
-      <div class="actions">
-        <button class="primary" onclick="location.href='cadastro.html'">Criar conta</button>
-      </div>
-    </nav>
-  </header>
 
+<body onload = "VerificarLogado()">
+  <header id="Header">
+  </header>
   <main>
     <section style="padding:75px 0;">
       <div class="wrap">
@@ -42,7 +30,7 @@
           <p class="note" style="margin-top:12px; text-align:center;">
             Ainda não tem conta? <a href="cadastro.html" style="color:var(--gold);">Cadastre-se</a>
           </p>
-      </div>
+        </div>
     </section>
   </main>
 
@@ -96,37 +84,82 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ emailServer: emailVar, senhaServer: senhaVar })
       })
-      .then(function (resposta) {
-        console.log('ESTOU NO THEN DO entrar()!');
+        .then(function (resposta) {
+          console.log('ESTOU NO THEN DO entrar()!');
 
-        if (resposta.ok) {
-          resposta.json().then(json => {
-            console.log(json);
-            sessionStorage.EMAIL_USUARIO = json.email;
-            sessionStorage.NOME_USUARIO = json.nome;
-            sessionStorage.ID_USUARIO = json.id;
-            clearLoginError();
-            let desejaFormulario = confirm('Login realizado com sucesso! Deseja preencher o formulário agora?');
-            if (desejaFormulario) {
-              window.location = '../formulario.html';
-            } else {
-              window.location = '../index.html';
-            }
-          });
-        } else {
-          console.log('Houve um erro ao tentar realizar o login!');
-          resposta.text().then(texto => {
-            console.error(texto);
-            showLoginError(texto || 'Erro ao realizar login.');
-          });
-        }
-      }).catch(function (erro) {
-        console.error('Erro no fetch /usuarios/autenticar:', erro);
-        showLoginError('Erro ao conectar com o servidor.');
-      });
+          if (resposta.ok) {
+            resposta.json().then(json => {
+              console.log(json);
+              sessionStorage.EMAIL_USUARIO = json.email;
+              sessionStorage.NOME_USUARIO = json.nome;
+              sessionStorage.ID_USUARIO = json.id;
+              clearLoginError();
+              let desejaFormulario = confirm('Login realizado com sucesso! Deseja preencher o formulário agora?');
+              if (desejaFormulario) {
+                window.location = '../formulario.html';
+              } else {
+                window.location = '../index.html';
+              }
+            });
+          } else {
+            console.log('Houve um erro ao tentar realizar o login!');
+            resposta.text().then(texto => {
+              console.error(texto);
+              showLoginError(texto || 'Erro ao realizar login.');
+            });
+          }
+        }).catch(function (erro) {
+          console.error('Erro no fetch /usuarios/autenticar:', erro);
+          showLoginError('Erro ao conectar com o servidor.');
+        });
 
-    return false;
+      return false;
+    }
+
+    function VerificarLogado() {
+      let loggedUserId = sessionStorage.ID_USUARIO;
+      if (!loggedUserId) {
+        Header.innerHTML = `
+        <nav class="wrap">
+          <a class="logo" href="#inicio"><img width = 100px src="../assets/logo.png"></a>
+            <div class="links">
+              <a href="../index.html">Pagina Inicial</a>
+              <a href="../jornada.html">Minha jornada</a>
+              <a href="../historia.html">Historia</a>
+              <a href="../conteudo.html">Conteúdo</a>
+              <a href="../classes.html">Classes</a>
+            </div>
+          <div class="actions">
+            <button onclick="window.location.href='login.html'">Entrar</button>
+            <button class="primary" onclick="window.location.href='cadastro.html'">Criar conta</button>
+          </div>
+        </nav>`
+
+      }
+      else {
+        Header.innerHTML = `
+        <nav class="wrap">
+          <a class="logo" href="#inicio"><img width = 100px src="assets/logo.png"></a>
+            <div class="links">
+              <a href="../index.html">Pagina Inicial</a>
+              <a href="../jornada.html">Minha jornada</a>
+              <a href="../historia.html">Historia</a>
+              <a href="../conteudo.html">Conteúdo</a>
+              <a href="../classes.html">Classes</a>
+            </div>
+          <div class="actions">
+            <button class="primary" onclick="window.location.href='../dashboard/panorama.html'">Dashboard</button>
+            <button onclick="deslogar()">Sair</button>
+          </div>
+        </nav>`
+
+      }
+    }
+    function deslogar() {
+      sessionStorage.clear()
+      window.location.href = '../index.html'
     }
   </script>
 </body>
+
 </html>

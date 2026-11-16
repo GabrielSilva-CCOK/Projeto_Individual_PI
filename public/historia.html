@@ -6,24 +6,9 @@
   <title>História | Tales of Azeroth</title>
   <link rel="stylesheet" href="css/site.css">
 </head>
-<body>
-  <header>
-    <nav class="wrap">
-      <a class="logo" href="#inicio"><img width = 100px src="assets\logo.png"></a>
-      <div class="links">
-        <a href="index.html">Pagina Inicial</a>
-        <a href="jornada.html">Minha jornada</a>
-        <a href="historia.html">Historia</a>
-        <a href="conteudo.html">Conteúdo</a>
-        <a href="classes.html">Classes</a>
-      </div>
-      <div class="actions">
-        <button onclick="window.location.href='cadastro/login.html'">Entrar</button>
-        <button class="primary" onclick="window.location.href='cadastro/cadastro.html'">Criar conta</button>
-      </div>
-    </nav>
+<body onload="VerificarLogado()">
+  <header id ="Header">
   </header>
-
   <main>
     <section class="hero" id="inicio" style="--hero-image: url('../assets/mapa.jpg');">
       <div class="wrap">
@@ -163,42 +148,49 @@
   </footer>
 
   <script>
-    function openModal(reg) {
-      document.getElementById('modal').classList.add('show');
-      document.getElementById('modalTitle').textContent = reg ? 'Criar conta' : 'Entrar';
-      document.getElementById('emailField').hidden = !reg;
-      document.getElementById('submitText').textContent = reg ? 'Cadastrar' : 'Entrar';
+    function VerificarLogado() {
+    let loggedUserId = sessionStorage.ID_USUARIO;
+    if (!loggedUserId) {
+      Header.innerHTML = `
+        <nav class="wrap">
+          <a class="logo" href="#inicio"><img width = 100px src="assets/logo.png"></a>
+            <div class="links">
+              <a href="index.html">Pagina Inicial</a>
+              <a href="jornada.html">Minha jornada</a>
+              <a href="historia.html">Historia</a>
+              <a href="conteudo.html">Conteúdo</a>
+              <a href="classes.html">Classes</a>
+            </div>
+          <div class="actions">
+            <button onclick="window.location.href='cadastro/login.html'">Entrar</button>
+            <button class="primary" onclick="window.location.href='cadastro/cadastro.html'">Criar conta</button>
+          </div>
+        </nav>`
+
     }
-    function closeModal() {
-      document.getElementById('modal').classList.remove('show');
+    else{
+      Header.innerHTML = `
+        <nav class="wrap">
+          <a class="logo" href="#inicio"><img width = 100px src="assets/logo.png"></a>
+            <div class="links">
+              <a href="index.html">Pagina Inicial</a>
+              <a href="jornada.html">Minha jornada</a>
+              <a href="historia.html">Historia</a>
+              <a href="conteudo.html">Conteúdo</a>
+              <a href="classes.html">Classes</a>
+            </div>
+          <div class="actions">
+            <button class="primary" onclick="window.location.href='dashboard/panorama.html'">Dashboard</button>
+            <button onclick="deslogar()">Sair</button>
+          </div>
+        </nav>`
+
     }
-    function demoSubmit(e) {
-      e.preventDefault();
-      alert('Demonstração visual: autenticação não conectada.');
-      closeModal();
-    }
-    document.getElementById('modal').addEventListener('click', e => {
-      if (e.target.id === 'modal') closeModal();
-    });
+  }
+  function  deslogar(){
+    sessionStorage.clear()
+    window.location.href='index.html'
+  }
   </script>
-  <!-- Modal (login / cadastro) -->
-  <div id="modal" class="modal" aria-hidden="true">
-    <div class="box" role="dialog" aria-modal="true">
-      <button class="close" onclick="closeModal()">&times;</button>
-      <h3 id="modalTitle">Entrar</h3>
-      <form onsubmit="demoSubmit(event)">
-        <input id="emailField" type="email" placeholder="Email" hidden>
-        <input id="userField" type="text" placeholder="Usuário" required>
-        <div class="campo-senha">
-          <input id="passField" type="password" placeholder="Senha" required>
-        </div>
-        <div style="display:flex;gap:8px;margin-top:12px;">
-          <button type="submit" class="primary" id="submitText">Entrar</button>
-          <button type="button" onclick="closeModal()">Cancelar</button>
-        </div>
-        <p class="note" style="margin-top:12px;">Demonstração: autenticação não conectada.</p>
-      </form>
-    </div>
-  </div>
 </body>
 </html>

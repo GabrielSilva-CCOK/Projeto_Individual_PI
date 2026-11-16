@@ -6,22 +6,8 @@
     <title>Classes — Tales of Azeroth</title>
     <link rel="stylesheet" href="css/site.css">
   </head>
-<body class="classes-page">
-  <header>
-    <nav class="wrap">
-      <a class="logo" href="index.html"><img width = 100px src="assets\logo.png"></a>
-      <div class="links">
-        <a href="index.html">Pagina Inicial</a>
-        <a href="jornada.html">Minha jornada</a>
-        <a href="historia.html">Historia</a>
-        <a href="conteudo.html">Conteúdo</a>
-        <a href="classes.html">Classes</a>
-      </div>
-      <div class="actions">
-        <button onclick="window.location.href='cadastro/login.html'">Entrar</button>
-        <button class="primary" onclick="window.location.href='cadastro/cadastro.html'">Criar conta</button>
-      </div>
-    </nav>
+<body class="classes-page" onload = "VerificarLogado()">
+  <header id = "Header">
   </header>
 
   <main>
@@ -192,6 +178,50 @@
 
       grid.appendChild(card);
     });
+
+        function VerificarLogado() {
+    let loggedUserId = sessionStorage.ID_USUARIO;
+    if (!loggedUserId) {
+      Header.innerHTML = `
+        <nav class="wrap">
+          <a class="logo" href="#inicio"><img width = 100px src="assets/logo.png"></a>
+            <div class="links">
+              <a href="index.html">Pagina Inicial</a>
+              <a href="jornada.html">Minha jornada</a>
+              <a href="historia.html">Historia</a>
+              <a href="conteudo.html">Conteúdo</a>
+              <a href="classes.html">Classes</a>
+            </div>
+          <div class="actions">
+            <button onclick="window.location.href='cadastro/login.html'">Entrar</button>
+            <button class="primary" onclick="window.location.href='cadastro/cadastro.html'">Criar conta</button>
+          </div>
+        </nav>`
+
+    }
+    else{
+      Header.innerHTML = `
+        <nav class="wrap">
+          <a class="logo" href="#inicio"><img width = 100px src="assets/logo.png"></a>
+            <div class="links">
+              <a href="index.html">Pagina Inicial</a>
+              <a href="jornada.html">Minha jornada</a>
+              <a href="historia.html">Historia</a>
+              <a href="conteudo.html">Conteúdo</a>
+              <a href="classes.html">Classes</a>
+            </div>
+          <div class="actions">
+            <button class="primary" onclick="window.location.href='dashboard/panorama.html'">Dashboard</button>
+            <button onclick="deslogar()">Sair</button>
+          </div>
+        </nav>`
+
+    }
+  }
+  function  deslogar(){
+    sessionStorage.clear()
+    window.location.href='index.html'
+  }
   </script>
 </body>
 </html>

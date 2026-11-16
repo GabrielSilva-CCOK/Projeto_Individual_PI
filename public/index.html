@@ -1,29 +1,16 @@
 <!doctype html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title> Pagina Principal | Tiles of Azeroth</title>
   <link rel="stylesheet" href="css/site.css">
 </head>
-<body>
-  <header>
-    <nav class="wrap">
-      <a class="logo" href="#inicio"><img width = 100px src="assets\logo.png"></a>
-      <div class="links">
-        <a href="index.html">Pagina Inicial</a>
-        <a href="jornada.html">Minha jornada</a>
-        <a href="historia.html">Historia</a>
-        <a href="conteudo.html">Conteúdo</a>
-        <a href="classes.html">Classes</a>
-      </div>
-      <div class="actions">
-        <button onclick="window.location.href='cadastro/login.html'">Entrar</button>
-        <button class="primary" onclick="window.location.href='cadastro/cadastro.html'">Criar conta</button>
-      </div>
-    </nav>
-  </header>
 
+<body onload="VerificarLogado()">
+  <header id="Header">
+  </header>
   <main>
     <section class="hero" id="inicio">
       <div class="wrap">
@@ -36,12 +23,13 @@
       </div>
     </section>
 
-     <section class="journey" id="jornada">
+    <section class="journey" id="jornada">
       <div class="wrap two">
         <div>
           <div class="eyebrow">Minha jornada</div>
           <h2 style="font-size:40px">Uma historia que começou em 2020</h2>
-          <p class="muted">World of Warcraft faz parte da minha história. O jogo proporcionou experiências, amizades e conexões com pessoas de diferentes lugares do mundo.</p>
+          <p class="muted">World of Warcraft faz parte da minha história. O jogo proporcionou experiências, amizades e
+            conexões com pessoas de diferentes lugares do mundo.</p>
           <div class="timeline">
             <div class="event">
               <strong>2020 — O começo</strong>
@@ -108,7 +96,8 @@
         <div class="intro">
           <div class="eyebrow">Conflitos e alianças</div>
           <h2>Horda &amp; Aliança</h2>
-          <p class="muted">As duas grandes facções possuem histórias, culturas e motivações próprias. Em Azeroth, os conflitos raramente são apenas uma questão de bem contra o mal.</p>
+          <p class="muted">As duas grandes facções possuem histórias, culturas e motivações próprias. Em Azeroth, os
+            conflitos raramente são apenas uma questão de bem contra o mal.</p>
         </div>
         <div class="factions">
           <div class="faction horde">
@@ -116,7 +105,8 @@
             <div class="pad">
               <div class="tag">Pela Horda</div>
               <h3>Horda</h3>
-              <p class="muted">Diferentes povos e culturas unidos por histórias de sobrevivência, honra, conflitos internos e busca por um lugar no mundo.</p>
+              <p class="muted">Diferentes povos e culturas unidos por histórias de sobrevivência, honra, conflitos
+                internos e busca por um lugar no mundo.</p>
             </div>
           </div>
           <div class="faction alliance">
@@ -124,7 +114,8 @@
             <div class="pad">
               <div class="tag">Pela Aliança</div>
               <h3>Aliança</h3>
-              <p class="muted">Uma união de reinos e povos que compartilham objetivos, mas também enfrentam divergências e decisões difíceis.</p>
+              <p class="muted">Uma união de reinos e povos que compartilham objetivos, mas também enfrentam divergências
+                e decisões difíceis.</p>
             </div>
           </div>
         </div>
@@ -148,4 +139,50 @@
     </div>
   </footer>
 </body>
+<script>
+  function VerificarLogado() {
+    let loggedUserId = sessionStorage.ID_USUARIO;
+    if (!loggedUserId) {
+      Header.innerHTML = `
+        <nav class="wrap">
+          <a class="logo" href="#inicio"><img width = 100px src="assets/logo.png"></a>
+            <div class="links">
+              <a href="index.html">Pagina Inicial</a>
+              <a href="jornada.html">Minha jornada</a>
+              <a href="historia.html">Historia</a>
+              <a href="conteudo.html">Conteúdo</a>
+              <a href="classes.html">Classes</a>
+            </div>
+          <div class="actions">
+            <button onclick="window.location.href='cadastro/login.html'">Entrar</button>
+            <button class="primary" onclick="window.location.href='cadastro/cadastro.html'">Criar conta</button>
+          </div>
+        </nav>`
+
+    }
+    else{
+      Header.innerHTML = `
+        <nav class="wrap">
+          <a class="logo" href="#inicio"><img width = 100px src="assets/logo.png"></a>
+            <div class="links">
+              <a href="index.html">Pagina Inicial</a>
+              <a href="jornada.html">Minha jornada</a>
+              <a href="historia.html">Historia</a>
+              <a href="conteudo.html">Conteúdo</a>
+              <a href="classes.html">Classes</a>
+            </div>
+          <div class="actions">
+            <button class="primary" onclick="window.location.href='dashboard/panorama.html'">Dashboard</button>
+            <button onclick="deslogar()">Sair</button>
+          </div>
+        </nav>`
+
+    }
+  }
+  function  deslogar(){
+    sessionStorage.clear()
+    window.location.href='index.html'
+  }
+</script>
+
 </html>

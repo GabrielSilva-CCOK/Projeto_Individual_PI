@@ -10,22 +10,10 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="../css/site.css">
 </head>
-<body>
+<body onload = "VerificarLogado()">
 <div class="app">
-  <header>
-  <header>
-    <nav class="wrap">
-      <a class="logo" href="../index.html"><img width = 100px src="../assets/logo.png"></a>
-      <div class="links">
-        <a href="../index.html">Pagina Inicial</a>
-        <a href="../jornada.html">Minha jornada</a>
-        <a href="../historia.html">Historia</a>
-        <a href="../conteudo.html">Conteúdo</a>
-        <a href="../classes.html">Classes</a>
-      </div>
-    </nav>
+  <header id = "Header">
   </header>
-
   <header class="top">
     <div class="brand">
       <h1>Dashboard da comunidade</h1>
@@ -99,5 +87,55 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="sample-data.js"></script>
+<script>
+    function VerificarLogado() {
+    let loggedUserId = sessionStorage.ID_USUARIO;
+    if (!loggedUserId) {
+      Header.innerHTML = `
+        <nav class="wrap">
+          <a class="logo" href="#inicio"><img width = 100px src="../assets/logo.png"></a>
+            <div class="links">
+              <a href="../index.html">Pagina Inicial</a>
+              <a href="../jornada.html">Minha jornada</a>
+              <a href="../historia.html">Historia</a>
+              <a href="../conteudo.html">Conteúdo</a>
+              <a href="../classes.html">Classes</a>
+            </div>
+          <div class="actions">
+            <button onclick="window.location.href='../cadastro/login.html'">Entrar</button>
+            <button class="primary" onclick="window.location.href='../cadastro/cadastro.html'">Criar conta</button>
+          </div>
+        </nav>`
+        if (confirm('Você precisa estar logado para acessar a dashboard. Deseja entrar agora?')) {
+          window.location.href = '../cadastro/login.html';
+        } else {
+          window.location.href = '../index.html';
+        }
+
+    }
+    else{
+      Header.innerHTML = `
+        <nav class="wrap">
+          <a class="logo" href="#inicio"><img width = 100px src="../assets/logo.png"></a>
+            <div class="links">
+              <a href="../index.html">Pagina Inicial</a>
+              <a href="../jornada.html">Minha jornada</a>
+              <a href="../historia.html">Historia</a>
+              <a href="../conteudo.html">Conteúdo</a>
+              <a href="../classes.html">Classes</a>
+            </div>
+          <div class="actions">
+            <button class="primary" onclick="window.location.href='dashboard/panorama.html'">Dashboard</button>
+            <button onclick="deslogar()">Sair</button>
+          </div>
+        </nav>`
+
+    }
+  }
+  function  deslogar(){
+    sessionStorage.clear()
+    window.location.href='../index.html'
+  }
+</script>
 </body>
 </html>
