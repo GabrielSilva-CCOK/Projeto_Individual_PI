@@ -7,17 +7,13 @@ comandos para mysql server
 */
 CREATE USER 'API'@'localhost' IDENTIFIED BY 'API100#';
 GRANT INSERT, SELECT ON azeroth.* TO 'API'@'localhost';
-
 CREATE DATABASE azeroth;
-
 USE azeroth;
-
-CREATE TABLE usuario (
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	nome VARCHAR(255),
-	email VARCHAR(255) NOT NULL UNIQUE,
-	senha VARCHAR(255) NOT NULL
-);
+CREATE TABLE usuario(
+id INT PRIMARY KEY AUTO_INCREMENT, 
+nome VARCHAR(255), 
+email VARCHAR(255)NOT NULL UNIQUE, 
+senha VARCHAR(255)NOT NULL);
 
 CREATE TABLE pergunta(
 idPergunta INT PRIMARY KEY AUTO_INCREMENT,
@@ -128,3 +124,138 @@ INSERT INTO alternativa (titulo, fk_pergunta) VALUES
 ('Sim, participo ativamente', 10),
 ('Sim, mas participo pouco', 10),
 ('Não participo de nenhuma guilda', 10);
+
+SELECT
+	p.idPergunta,
+    p.enunciado,
+    a.titulo AS alternativa
+FROM pergunta AS p
+JOIN alternativa AS a
+    ON p.idPergunta = a.fk_pergunta;
+    
+SELECT
+	up.id_usuario,
+	u.nome,
+    p.idPergunta,
+	p.enunciado,
+    a.titulo
+FROM usuario_pergunta AS up
+JOIN alternativa AS a
+ON a.idAlternativa = up.id_alternativa
+JOIN pergunta AS p
+ON p.idPergunta = up.id_pergunta
+JOIN usuario AS u
+ON u.id = up.id_usuario
+ORDER BY idPergunta;
+
+
+-- total de usuarios que responderam o formulario --
+CREATE VIEW vwUsuariosCadastrados AS
+SELECT
+    COUNT(*) AS total_usuarios,
+    (SELECT COUNT(DISTINCT id_usuario)
+     FROM usuario_pergunta) AS formularios_respondidos,
+
+    ROUND(
+        (SELECT COUNT(DISTINCT id_usuario)
+         FROM usuario_pergunta) * 100.0 / NULLIF(COUNT(*), 0),
+        2
+    ) AS porcentagem_participacao
+FROM usuario;
+
+-- Porcentagem entre facções --
+CREATE VIEW vwPercFaccao AS
+SELECT
+    ROUND(
+        (SELECT COUNT(*)
+         FROM usuario_pergunta
+         WHERE id_pergunta = 1 AND id_alternativa = 1
+        ) * 100.0 /
+        (SELECT COUNT(*)
+         FROM usuario_pergunta
+         WHERE id_pergunta = 1),
+    2) AS perc_horda,
+	ROUND(
+        (SELECT COUNT(*)
+         FROM usuario_pergunta
+         WHERE id_pergunta = 1 AND id_alternativa = 1
+        ) * 100.0 /
+        (SELECT COUNT(*)
+         FROM usuario_pergunta
+         WHERE id_pergunta = 2),
+    2) AS perc_alianca;
+        
+-- porcentagem de cada classe -- 
+CREATE VIEW vwClassPercent AS
+SELECT
+    a.titulo AS classe,
+    COUNT(*) AS quantidade,
+    ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER(), 2) AS porcentagem
+FROM usuario_pergunta AS up
+JOIN alternativa AS a
+    ON up.id_alternativa = a.idAlternativa
+WHERE up.id_pergunta = 2
+GROUP BY a.idAlternativa, a.titulo
+ORDER BY quantidade DESC;
+
+-- Porcentagem DPS, Tank Ou Healer --
+CREATE VIEW vwRolePercent AS
+SELECT
+	a.titulo AS 'função',
+    COUNT(*) AS quantidade,
+    ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER(), 2) AS porcentagem
+FROM usuario_pergunta AS up
+JOIN alternativa AS a
+    ON up.id_alternativa = a.idAlternativa
+WHERE up.id_pergunta = 3
+GROUP BY a.idAlternativa, a.titulo
+ORDER BY quantidade DESC;
+
+-- Porcentagem Retail, Classic Ou ambas --
+CREATE VIEW vwVersionPercent AS
+SELECT
+	a.titulo AS 'Versão',
+    COUNT(*) AS quantidade,
+    ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER(), 2) AS porcentagem
+FROM usuario_pergunta AS up
+JOIN alternativa AS a
+    ON up.id_alternativa = a.idAlternativa
+WHERE up.id_pergunta = 4
+GROUP BY a.idAlternativa, a.titulo
+ORDER BY quantidade DESC;
+
+-- Media anos jogados --
+CREATE VIEW vwMediaAnos AS
+SELECT
+    ROUND(AVG(
+        CASE
+            WHEN a.titulo = 'Menos de 1 ano' THEN 0.5
+            WHEN a.titulo = 'De 1 a 2 anos' THEN 2
+            WHEN a.titulo = 'De 3 a 4 anos' THEN 4
+            WHEN a.titulo = 'De 5 a 7 anos' THEN 6
+            WHEN a.titulo = 'De 8 a 10 anos' THEN 9
+            WHEN a.titulo = 'Mais de 10 anos' THEN 12
+        END
+    ), 2) AS media_anos_jogados
+FROM usuario_pergunta AS up
+JOIN alternativa AS a
+    ON up.id_alternativa = a.idAlternativa
+WHERE up.id_pergunta = 7;
+
+
+SELECT
+    ROUND(AVG(
+        CASE
+            WHEN a.titulo = 'Menos de 1 ano' THEN 0.5
+            WHEN a.titulo = 'De 1 a 2 anos' THEN 2
+            WHEN a.titulo = 'De 3 a 4 anos' THEN 4
+            WHEN a.titulo = 'De 5 a 7 anos' THEN 6
+            WHEN a.titulo = 'De 8 a 10 anos' THEN 9
+            WHEN a.titulo = 'Mais de 10 anos' THEN 12
+        END
+    ), 2) AS media_anos_jogados
+FROM usuario_pergunta AS up
+JOIN alternativa AS a
+    ON up.id_alternativa = a.idAlternativa
+WHERE up.id_pergunta = 7;
+
