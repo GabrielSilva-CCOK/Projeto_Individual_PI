@@ -1,14 +1,29 @@
-
 <!doctype html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Criar conta — Azeroth</title>
   <link rel="stylesheet" href="../css/site.css">
 </head>
-<body onload = "VerificarLogado()">
-  <header id = "Header">
+
+<body onload="VerificarLogado()">
+  <header id="Header">
+    <nav class="wrap">
+      <a class="logo" href="#inicio"><img width=100px src="../assets/logo.png"></a>
+      <div class="links">
+        <a href="../index.html">Pagina Inicial</a>
+        <a href="../jornada.html">Minha jornada</a>
+        <a href="../historia.html">Historia</a>
+        <a href="../conteudo.html">Conteúdo</a>
+        <a href="../classes.html">Classes</a>
+      </div>
+      <div class="actions">
+        <button onclick="window.location.href='login.html'">Entrar</button>
+        <button class="primary" onclick="window.location.href='cadastro.html'">Criar conta</button>
+      </div>
+    </nav>
   </header>
   <main>
     <section style="padding:75px 0;">
@@ -24,13 +39,15 @@
 
             <label>Senha</label>
             <div class="campo-senha">
-              <input id="ipt_senha" type="password" class="input" required placeholder="Sua senha" oninput="verificarForca()">
+              <input id="ipt_senha" type="password" class="input" required placeholder="Sua senha"
+                oninput="verificarForca()">
               <button type="button" class="botao-olho" onclick="alternarSenha('ipt_senha', this)">Mostrar</button>
             </div>
             <label>Confirme sua senha</label>
             <div class="campo-senha">
               <input id="ipt_confirmar_senha" type="password" class="input" required placeholder="Confirme a senha">
-              <button type="button" class="botao-olho" onclick="alternarSenha('ipt_confirmar_senha', this)">Mostrar</button>
+              <button type="button" class="botao-olho"
+                onclick="alternarSenha('ipt_confirmar_senha', this)">Mostrar</button>
             </div>
             <div class="forca-barra">
               <div class="forca-preenchimento" id="forca_barra"></div>
@@ -137,12 +154,12 @@
       let emailVar = (ipt_email.value).trim()
       let senhaVar = ipt_senha.value
       let confirmaVar = ipt_confirmar_senha.value
-      
+
       clearError();
       if (!nomeVar || !emailVar || !senhaVar || !confirmaVar) {
-          showError('Preencha todos os campos.')
-          return false
-        } 
+        showError('Preencha todos os campos.')
+        return false
+      }
 
       if (!emailVar.includes('@') || !emailVar.includes('.')) {
         showError('Digite um e-mail válido.')
@@ -156,7 +173,7 @@
 
       if (senhaVar !== confirmaVar) {
         const msg = document.getElementById('msg_erro')
-        msg.innerHTML = 'As senhas não coincidem.' 
+        msg.innerHTML = 'As senhas não coincidem.'
         msg.style.display = 'block'
         document.getElementById('ipt_confirmar_senha')
         return false;
@@ -171,76 +188,59 @@
           senhaServer: senhaVar,
         })
       })
-      .then(function (resposta) {
-        console.log('resposta: ', resposta);
+        .then(function (resposta) {
+          console.log('resposta: ', resposta);
 
-        if (resposta.ok) {
-          if (typeof cardErro !== 'undefined' && typeof mensagem_erro !== 'undefined') {
-            cardErro.style.display = 'block';
-            alert('Cadastro realizado com sucesso! Redirecionando para tela de Login...');
+          if (resposta.ok) {
+            if (typeof cardErro !== 'undefined' && typeof mensagem_erro !== 'undefined') {
+              cardErro.style.display = 'block';
+              alert('Cadastro realizado com sucesso! Redirecionando para tela de Login...');
+            }
+
+            setTimeout(() => { window.location = 'login.html'; }, 2000);
+
+          } else {
+            // tenta mostrar mensagem do servidor
+            resposta.text().then(texto => showError(texto || 'Erro ao realizar cadastro.'))
           }
-
-          setTimeout(() => { window.location = 'login.html'; }, 2000);
-
-        } else {
-          // tenta mostrar mensagem do servidor
-          resposta.text().then(texto => showError(texto || 'Erro ao realizar cadastro.'))
-        }
-      })
-      .catch(function (resposta) {
-        console.log('#ERRO: ' + resposta);
-        showError('Erro ao conectar com o servidor.');
-        finalizarAguardar?.();
-      });
+        })
+        .catch(function (resposta) {
+          console.log('#ERRO: ' + resposta);
+          showError('Erro ao conectar com o servidor.');
+          finalizarAguardar?.();
+        });
 
       return false;
     }
 
 
     function VerificarLogado() {
-    let loggedUserId = sessionStorage.ID_USUARIO;
-    if (!loggedUserId) {
-      Header.innerHTML = `
-        <nav class="wrap">
-          <a class="logo" href="#inicio"><img width = 100px src="../assets/logo.png"></a>
-            <div class="links">
-              <a href="../index.html">Pagina Inicial</a>
-              <a href="../jornada.html">Minha jornada</a>
-              <a href="../historia.html">Historia</a>
-              <a href="../conteudo.html">Conteúdo</a>
-              <a href="../classes.html">Classes</a>
-            </div>
-          <div class="actions">
-            <button onclick="window.location.href='login.html'">Entrar</button>
-            <button class="primary" onclick="window.location.href='cadastro.html'">Criar conta</button>
-          </div>
-        </nav>`
+      let loggedUserId = sessionStorage.ID_USUARIO;
+      if (loggedUserId) {
+        Header.innerHTML = `
+      <nav class="wrap">
+        <a class="logo" href="index.html"><img width="100" src="assets/logo.png" alt="Tales of Azeroth"></a>
+        <div class="links">
+          <a href="index.html">Pagina Inicial</a>
+          <a href="jornada.html">Minha jornada</a>
+          <a href="historia.html">Historia</a>
+          <a href="conteudo.html">Conteúdo</a>
+          <a href="classes.html">Classes</a>
+        </div>
+        <div class="actions">
+          <button class="primary" onclick="window.location.href='dashboard/dashboard.html'">Dashboard</button>
+          <button onclick="window.location.href='quests.html'">Quests</button>
+          <button onclick="deslogar()">Sair</button>
+        </div>
+      </nav>`
 
+      }
     }
-    else{
-      Header.innerHTML = `
-        <nav class="wrap">
-          <a class="logo" href="#inicio"><img width = 100px src="assets/logo.png"></a>
-            <div class="links">
-              <a href="../index.html">Pagina Inicial</a>
-              <a href="../jornada.html">Minha jornada</a>
-              <a href="../historia.html">Historia</a>
-              <a href="../conteudo.html">Conteúdo</a>
-              <a href="../classes.html">Classes</a>
-            </div>
-          <div class="actions">
-            <button class="primary" onclick="window.location.href='../dashboard/panorama.html'">Dashboard</button>
-            <button onclick="deslogar()">Sair</button>
-          </div>
-        </nav>`
-
+    function deslogar() {
+      sessionStorage.clear()
+      window.location.href = '../index.html'
     }
-  }
-  function  deslogar(){
-    sessionStorage.clear()
-    window.location.href='../index.html'
-  }
   </script>
 </body>
-</html>
 
+</html>

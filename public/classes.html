@@ -1,20 +1,37 @@
 <!doctype html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Classes — Tales of Azeroth</title>
-    <link rel="stylesheet" href="css/site.css">
-  </head>
-<body class="classes-page" onload = "VerificarLogado()">
-  <header id = "Header">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Classes — Tales of Azeroth</title>
+  <link rel="stylesheet" href="css/site.css">
+</head>
+
+<body class="classes-page" onload="VerificarLogado()">
+  <header id="Header">
+    <nav class="wrap">
+      <a class="logo" href="#inicio"><img width=100px src="assets/logo.png"></a>
+      <div class="links">
+        <a href="index.html">Pagina Inicial</a>
+        <a href="jornada.html">Minha jornada</a>
+        <a href="historia.html">Historia</a>
+        <a href="conteudo.html">Conteúdo</a>
+        <a href="classes.html">Classes</a>
+      </div>
+      <div class="actions">
+        <button onclick="window.location.href='cadastro/login.html'">Entrar</button>
+        <button class="primary" onclick="window.location.href='cadastro/cadastro.html'">Criar conta</button>
+      </div>
+    </nav>
   </header>
 
   <main>
     <section class="wrap">
       <div class="box classes-box">
         <h2>Classes de World of Warcraft</h2>
-        <p class="note">Escolha seu papel e sua classe. Cada classe pode desempenhar uma ou mais das três funções abaixo.</p>
+        <p class="note">Escolha seu papel e sua classe. Cada classe pode desempenhar uma ou mais das três funções
+          abaixo.</p>
 
         <h3 style="margin-top:24px;">Papeis (Roles)</h3>
         <div class="grid roles-overview" style="margin-bottom:24px;">
@@ -216,49 +233,33 @@
       grid.appendChild(card);
     }
 
-        function VerificarLogado() {
-    let loggedUserId = sessionStorage.ID_USUARIO;
-    if (!loggedUserId) {
-      Header.innerHTML = `
-        <nav class="wrap">
-          <a class="logo" href="#inicio"><img width = 100px src="assets/logo.png"></a>
-            <div class="links">
-              <a href="index.html">Pagina Inicial</a>
-              <a href="jornada.html">Minha jornada</a>
-              <a href="historia.html">Historia</a>
-              <a href="conteudo.html">Conteúdo</a>
-              <a href="classes.html">Classes</a>
-            </div>
-          <div class="actions">
-            <button onclick="window.location.href='cadastro/login.html'">Entrar</button>
-            <button class="primary" onclick="window.location.href='cadastro/cadastro.html'">Criar conta</button>
-          </div>
-        </nav>`
+    function VerificarLogado() {
+      let loggedUserId = sessionStorage.ID_USUARIO;
+      if (loggedUserId) {
+        Header.innerHTML = `
+      <nav class="wrap">
+        <a class="logo" href="index.html"><img width="100" src="assets/logo.png" alt="Tales of Azeroth"></a>
+        <div class="links">
+          <a href="index.html">Pagina Inicial</a>
+          <a href="jornada.html">Minha jornada</a>
+          <a href="historia.html">Historia</a>
+          <a href="conteudo.html">Conteúdo</a>
+          <a href="classes.html">Classes</a>
+        </div>
+        <div class="actions">
+          <button class="primary" onclick="window.location.href='dashboard/dashboard.html'">Dashboard</button>
+          <button onclick="window.location.href='quests.html'">Quests</button>
+          <button onclick="deslogar()">Sair</button>
+        </div>
+      </nav>`
 
+      }
     }
-    else{
-      Header.innerHTML = `
-        <nav class="wrap">
-          <a class="logo" href="#inicio"><img width = 100px src="assets/logo.png"></a>
-            <div class="links">
-              <a href="index.html">Pagina Inicial</a>
-              <a href="jornada.html">Minha jornada</a>
-              <a href="historia.html">Historia</a>
-              <a href="conteudo.html">Conteúdo</a>
-              <a href="classes.html">Classes</a>
-            </div>
-          <div class="actions">
-            <button class="primary" onclick="window.location.href='dashboard/panorama.html'">Dashboard</button>
-            <button onclick="deslogar()">Sair</button>
-          </div>
-        </nav>`
-
+    function deslogar() {
+      sessionStorage.clear()
+      window.location.href = 'index.html'
     }
-  }
-  function  deslogar(){
-    sessionStorage.clear()
-    window.location.href='index.html'
-  }
   </script>
 </body>
+
 </html>

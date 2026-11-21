@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tales of Azeroth | Dashboard</title>
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="sample-data.js"></script>
+  <script src="dashboard.js" defer></script>
+</head>
+<body>
+  <main class="dashboard">
+    <header class="topbar">
+      <div class="brand-mark" aria-hidden="true">✦</div>
+      <div class="brand-copy">
+        <span class="eyebrow">TALES OF AZEROTH</span>
+        <h1>Painel de comunidade</h1>
+      </div>
+      <div class="header-note"><span class="status-dot"></span> DADOS DO FORMULÁRIO</div>
+    </header>
+
+
+    <section class="kpi-grid" aria-label="Indicadores principais">
+      <article class="kpi-card">
+        <div class="kpi-heading"><span>RESPOSTAS AO FORMULÁRIO</span><span class="kpi-icon">✉</span></div>
+        <div class="kpi-value" id="responses">—</div>
+        <div class="kpi-sub"><strong id="responseRate">—</strong> do total de usuários cadastrados</div>
+        <div class="kpi-track"><div class="kpi-fill" id="responseBar"></div></div>
+      </article>
+      <article class="kpi-card">
+        <div class="kpi-heading"><span>CONTEÚDO PREFERIDO</span><span class="kpi-icon">✧</span></div>
+        <div class="kpi-value kpi-text" id="topContent">—</div>
+        <div class="kpi-sub"><strong id="topContentRate">—</strong> dos usuários que responderam</div>
+        <div class="kpi-track"><div class="kpi-fill" id="contentBar"></div></div>
+      </article>
+      <article class="kpi-card">
+        <div class="kpi-heading"><span>JOGADORES EM GUILDAS</span><span class="kpi-icon">♜</span></div>
+        <div class="kpi-value" id="guildRate">—</div>
+        <div class="kpi-sub"><strong id="guildCount">—</strong> respostas selecionaram essa opção</div>
+        <div class="kpi-track"><div class="kpi-fill" id="guildBar"></div></div>
+      </article>
+      <article class="kpi-card">
+        <div class="kpi-heading"><span>TAXA DE VETERANOS</span><span class="kpi-icon">♙</span></div>
+        <div class="kpi-value" id="veteranRate">—</div>
+        <div class="kpi-sub">Veteranos: jogadores com <strong>10 anos ou mais</strong> de experiência</div>
+        <div class="kpi-track"><div class="kpi-fill" id="veteranBar"></div></div>
+      </article>
+    </section>
+
+
+    <section class="charts-grid" aria-label="Gráficos da pesquisa">
+      <article class="chart-card classes-card">
+        <div class="chart-title"><div><span class="chart-kicker">PREFERÊNCIAS</span><h2>Classes favoritas</h2></div><span class="chart-total" id="classTotal">— votos</span></div>
+        <div class="chart-area bar-area"><canvas id="classesChart"></canvas></div>
+      </article>
+      <article class="chart-card pie-card">
+        <div class="chart-title"><div><span class="chart-kicker">ALIANÇA × HORDA</span><h2>Facção favorita</h2></div></div>
+        <div class="chart-area pie-area"><canvas id="factionChart"></canvas></div>
+        <div class="chart-foot" id="factionFoot"></div>
+      </article>
+      <article class="chart-card pie-card">
+        <div class="chart-title"><div><span class="chart-kicker">ESTILO DE JOGO</span><h2>Role favorita</h2></div></div>
+        <div class="chart-area pie-area"><canvas id="roleChart"></canvas></div>
+        <div class="chart-foot" id="roleFoot"></div>
+      </article>
+      <article class="chart-card pie-card">
+        <div class="chart-title"><div><span class="chart-kicker">VERSÕES DE WOW</span><h2>Versão favorita</h2></div></div>
+        <div class="chart-area pie-area"><canvas id="versionChart"></canvas></div>
+        <div class="chart-foot" id="versionFoot"></div>
+      </article>
+    </section>
+    <footer class="footer"><span>✦ FOR THE ALLIANCE · FOR THE HORDE ✦</span><span>TALES OF AZEROTH</span></footer>
+  </main>
+</body>
+</html>

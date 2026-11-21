@@ -1,15 +1,17 @@
 <!doctype html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Formulário — Azeroth</title>
   <link rel="stylesheet" href="css/site.css">
 </head>
+
 <body>
   <header>
     <nav class="wrap">
-      <a class="logo" href="index.html"><img width="100px" src="assets/logo.png"></a>
+      <a class="logo" href="index.html"><img width="100" src="assets/logo.png" alt="Tales of Azeroth"></a>
       <div class="links">
         <a href="index.html">Pagina Inicial</a>
         <a href="jornada.html">Minha jornada</a>
@@ -18,7 +20,9 @@
         <a href="classes.html">Classes</a>
       </div>
       <div class="actions">
-        <button onclick="window.location.href='dashboard/jornada.html'">Dashboard</button>
+        <button class="primary" onclick="window.location.href='dashboard/dashboard.html'">Dashboard</button>
+        <button onclick="window.location.href='quests.html'">Quests</button>
+        <button onclick="deslogar()">Sair</button>
       </div>
     </nav>
   </header>
@@ -163,13 +167,13 @@
       }
     }
     async function carregarPerguntas() {
-        const respostaServidor = await fetch('/formulario/perguntas');
-        perguntas = await respostaServidor.json();
-        respostas = [];
-        for (let i = 0; i < perguntas.length; i++) {
-          respostas.push(null);
-        }
-        mostrarPergunta();
+      const respostaServidor = await fetch('/formulario/perguntas');
+      perguntas = await respostaServidor.json();
+      respostas = [];
+      for (let i = 0; i < perguntas.length; i++) {
+        respostas.push(null);
+      }
+      mostrarPergunta();
     }
 
     if (!idUsuario) {
@@ -187,4 +191,5 @@
     }
   </script>
 </body>
+
 </html>
