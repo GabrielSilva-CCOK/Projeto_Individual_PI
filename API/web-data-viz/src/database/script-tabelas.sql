@@ -5,7 +5,7 @@
 /*
 comandos para mysql server
 */
-CREATE USER 'API'@'localhost' IDENTIFIED BY 'API100#';
+CREATE USER 'API'@'localhost' IDENTIFIED BY 'ApiInsert100#';
 GRANT INSERT, SELECT ON azeroth.* TO 'API'@'localhost';
 CREATE DATABASE azeroth;
 USE azeroth;

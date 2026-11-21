@@ -2,6 +2,7 @@
 Chart.defaults.color = '#aeb7bf';
 Chart.defaults.font.family = 'Alegreya Sans, Inter, sans-serif';
 Chart.defaults.font.size = 11;
+Chart.defaults.devicePixelRatio = Math.min(window.devicePixelRatio || 1, 2);
 Chart.defaults.plugins.legend.labels.usePointStyle = true;
 Chart.defaults.plugins.legend.labels.boxWidth = 8;
 Chart.defaults.plugins.legend.labels.padding = 16;
@@ -17,17 +18,66 @@ const baseOptions = {
 function doughnut(id, labels, data, colors) {
   const el = document.getElementById(id);
   if (!el) return null;
-  return new Chart(el, { type:'doughnut', data:{ labels, datasets:[{data, backgroundColor:colors, borderColor:'#171e26', borderWidth:3, hoverOffset:7}] },
-    options:{...baseOptions, cutout:'65%'} });
+  return new Chart(el, {
+    type: 'doughnut',
+    data: { labels, datasets: [{ data, backgroundColor: colors, borderColor: '#171e26', borderWidth: 3, hoverOffset: 7 }] },
+    options: { ...baseOptions, cutout: '65%' },
+    plugins: [{
+      id: 'doughnut-labels',
+      afterDatasetsDraw(chart) {
+        const ctx = chart.ctx;
+        ctx.save();
+        const fam = Chart.defaults.font.family || 'Alegreya Sans, Inter, sans-serif';
+        const size = 14;
+        ctx.font = '700 ' + size + 'px ' + fam;
+        ctx.fillStyle = Chart.defaults.color || '#c0b498';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        chart.getDatasetMeta(0).data.forEach((arc, i) => {
+          const pct = data[i];
+          const txt = pct + '%';
+          const p = arc.tooltipPosition();
+          ctx.fillText(txt, p.x, p.y);
+        });
+        ctx.restore();
+      }
+    }]
+  });
 }
 
 function bars(id, labels, data, color, horizontal=false) {
   const el = document.getElementById(id);
   if (!el) return null;
-  return new Chart(el, { type:'bar', data:{ labels, datasets:[{data, backgroundColor:color, borderRadius:4, maxBarThickness:30}] },
-    options:{...baseOptions, indexAxis: horizontal?'y':'x', plugins:{...baseOptions.plugins, legend:{display:false}},
-      scales:{ x:{grid:{display:!horizontal, color:gridColor}, ticks:{color:'#aeb7bf'}, border:{display:false}},
-               y:{grid:{display:horizontal, color:gridColor}, ticks:{color:'#aeb7bf'}, border:{display:false}, beginAtZero:true} } } });
+  return new Chart(el, {
+    type: 'bar',
+    data: { labels, datasets: [{ data, backgroundColor: color, borderRadius: 4, maxBarThickness: 30 }] },
+    options: { ...baseOptions, indexAxis: horizontal ? 'y' : 'x', plugins: { ...baseOptions.plugins, legend: { display: false } },
+      scales: {
+        x: { grid: { display: !horizontal, color: gridColor }, ticks: { color: '#aeb7bf' }, border: { display: false } },
+        y: { grid: { display: horizontal, color: gridColor }, ticks: { color: '#aeb7bf' }, border: { display: false }, beginAtZero: true }
+      }
+    },
+    plugins: [{
+      id: 'bar-labels',
+      afterDatasetsDraw(chart) {
+        const ctx = chart.ctx;
+        ctx.save();
+        const fam = Chart.defaults.font.family || 'Alegreya Sans, Inter, sans-serif';
+        ctx.font = '700 11px ' + fam;
+        ctx.fillStyle = Chart.defaults.color || '#c0b498';
+        ctx.textAlign = horizontal ? 'left' : 'center';
+        ctx.textBaseline = horizontal ? 'middle' : 'bottom';
+        const meta = chart.getDatasetMeta(0);
+        meta.data.forEach((bar, i) => {
+          const val = data[i];
+          const txt = val + '%';
+          if (horizontal) ctx.fillText(txt, bar.x + 8, bar.y);
+          else ctx.fillText(txt, bar.x, bar.y - 6);
+        });
+        ctx.restore();
+      }
+    }]
+  });
 }
 
 // Valores mockados utilizados por ambas dashboards
@@ -37,7 +87,9 @@ const sample = {
     faccao: { labels:['Horda','Aliança'], data:[54,46] },
     classes: { labels:['Caçador','Paladino','Mago','Guerreiro','Druida','Bruxo','Outras'], data:[22,17,16,14,12,10,9] },
     role: { labels:['DPS','Tank','Healer'], data:[60,22,18] },
-    versao: { labels:['Retail','Classic','Ambos'], data:[58,27,15] }
+    versao: { labels:['Retail','Classic','Ambos'], data:[58,27,15] },
+    atrativo: { labels:['Masmorras','Raids','Mítica+','Mundo aberto','Coleções','PvP','Amigos e guilda'], data:[30,25,18,12,9,4,2] },
+    guilda: { labels:['Sim','Não','Já participei'], data:[54,36,10] }
   },
   jornada: {
     anos: { labels:['<1','1–3','4–6','7–10','>10'], data:[10,22,26,28,14] },
@@ -70,54 +122,61 @@ function initPanorama() {
     if (k1s) k1s.textContent = '68% dos usuarios cadastrados'
   }
 
-  // Facção dominante
-  const facIdx = sample.panorama.faccao.data.indexOf(Math.max(...sample.panorama.faccao.data));
-  const facLabel = sample.panorama.faccao.labels[facIdx];
-  const facPct = sample.panorama.faccao.data[facIdx];
+  // Conteúdo preferido (atrativo): mostra o item mais votado e o 2º colocado
   if (k2) {
-    k2.textContent = facLabel + ' · ' + facPct + '%';
+    const atr = sample.panorama.atrativo;
+    const idx = atr.data.indexOf(Math.max(...atr.data));
+    const label = atr.labels[idx];
+    const pct = atr.data[idx];
+    const sorted = atr.data.map((v,i)=>[v,i]).sort((a,b)=>b[0]-a[0]);
+    const second = sorted[1] ? atr.labels[sorted[1][1]] + ' ' + sorted[1][0] + '%' : '';
+    k2.textContent = label + ' · ' + pct + '%';
     const k2c = document.getElementById('k2c');
     const k2s = document.getElementById('k2s');
     const k2sub = document.getElementById('k2sub');
-    if (k2sub) k2sub.textContent = 'participação';
+    if (k2sub) k2sub.textContent = second;
     if (k2c) {
-      if (facPct >= 60) { k2c.className='chip bad'; k2c.textContent='Desequilíbrio' }
-      else if (facPct >= 53) { k2c.className='chip warn'; k2c.textContent='Leve vantagem' }
-      else { k2c.className='chip good'; k2c.textContent='Equilíbrio' }
+      if (pct >= 40) { k2c.className='chip good'; k2c.textContent='Foco claro' }
+      else if (pct >= 25) { k2c.className='chip warn'; k2c.textContent='Popular' }
+      else { k2c.className='chip good'; k2c.textContent='Diverso' }
     }
     if (k2s) k2s.textContent = ''
   }
 
-  // Classe dominante
+  // Jogadores em guildas (nova KPI): mostra número exato e % em relação ao total
   if (k3) {
-    k3.textContent = sample.panorama.classes.labels[0] + ' · ' + sample.panorama.classes.data[0] + '%';
+    const g = sample.panorama.guilda;
+    const idxSim = g.labels.indexOf('Sim');
+    const simPct = idxSim !== -1 ? g.data[idxSim] : 0;
+    const total = sample.panorama.total || 0;
+    const simCount = Math.round(simPct / 100 * total);
     const k3c = document.getElementById('k3c');
     const k3s = document.getElementById('k3s');
-    const k3sub = document.getElementById('k3sub');
-    if (k3sub) k3sub.textContent = 'preferência';
+    const pctText = total ? Math.round(simCount / total * 100) + '%' : '—';
+    // escreve número exato + subtítulo (percentual do total)
+    k3.innerHTML = '<span class="vt">' + simCount.toLocaleString() + '</span> <small>' + pctText + ' do total</small>';
     if (k3c) {
-      const top = sample.panorama.classes.data[0];
-      if (top >= 35) { k3c.className='chip bad'; k3c.textContent='Concentração' }
-      else if (top >= 25) { k3c.className='chip warn'; k3c.textContent='Popular' }
-      else { k3c.className='chip good'; k3c.textContent='Diverso' }
+      if (simPct >= 60) { k3c.className='chip good'; k3c.textContent='Comunitário' }
+      else if (simPct >= 35) { k3c.className='chip warn'; k3c.textContent='Moderado' }
+      else { k3c.className='chip bad'; k3c.textContent='Pouco' }
     }
-    if (k3s) k3s.textContent = '8% a mais que mago'
+    if (k3s) k3s.textContent = ''
   }
 
-  // Equilíbrio entre facções (diferença percentual)
+  // Taxa de veteranos (>10 anos) — utiliza distribuição de 'anos' da jornada
   if (k4) {
-    const diff = Math.abs(sample.panorama.faccao.data[0] - sample.panorama.faccao.data[1]);
-    k4.textContent = diff + '%';
+    const vets = (sample.jornada && sample.jornada.anos && sample.jornada.anos.data[4]) ? sample.jornada.anos.data[4] : 0;
+    k4.textContent = vets + '%';
     const k4c = document.getElementById('k4c');
     const k4s = document.getElementById('k4s');
     const k4sub = document.getElementById('k4sub');
-    if (k4sub) k4sub.textContent = 'diferença';
+    if (k4sub) k4sub.textContent = '>10 anos (veteranos)';
     if (k4c) {
-      if (diff <= 5) { k4c.className='chip good'; k4c.textContent='Balanceado' }
-      else if (diff <= 15) { k4c.className='chip warn'; k4c.textContent='Leve diverg.' }
-      else { k4c.className='chip bad'; k4c.textContent='Desbalanceado' }
+      if (vets >= 25) { k4c.className='chip good'; k4c.textContent='Alta' }
+      else if (vets >=12) { k4c.className='chip warn'; k4c.textContent='Média' }
+      else { k4c.className='chip bad'; k4c.textContent='Baixa' }
     }
-    if (k4s) k4s.textContent = 'Proporção entre Horda e Aliança.'
+    if (k4s) k4s.textContent = 'Jogadores com 10 anos ou mais de jogo'
   }
 
   doughnut('c-fac', sample.panorama.faccao.labels, sample.panorama.faccao.data, [red, blue]);
