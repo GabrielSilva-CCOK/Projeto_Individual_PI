@@ -8,79 +8,79 @@
   <link rel="stylesheet" href="css/site.css">
 </head>
 
-<body>
-    <header id = "Header">
-      <nav class="wrap">
-        <a class="logo" href="index.html"><img width="100" src="assets/logo.png" alt="Tales of Azeroth"></a>
-        <div class="links">
-          <a href="index.html">Pagina Inicial</a>
-          <a href="jornada.html">Minha jornada</a>
-          <a href="historia.html">Historia</a>
-          <a href="conteudo.html">Conteúdo</a>
-          <a href="classes.html">Classes</a>
-        </div>
-        <div class="actions">
-          <button class="primary" onclick="window.location.href='dashboard/dashboard.html'">Dashboard</button>
-          <button onclick="window.location.href='quests.html'">Quests</button>
-          <button onclick="deslogar()">Sair</button>
-        </div>
-      </nav>
+<body onload="VerificarLogado()">
+  <header id="Header">
+    <nav class="wrap">
+      <a class="logo" href="index.html"><img width="100" src="assets/logo.png" alt="Tales of Azeroth"></a>
+      <div class="links">
+        <a href="index.html">Pagina Inicial</a>
+        <a href="jornada.html">Minha jornada</a>
+        <a href="historia.html">Historia</a>
+        <a href="conteudo.html">Conteúdo</a>
+        <a href="classes.html">Classes</a>
+      </div>
+      <div class="actions">
+        <button class="primary" onclick="window.location.href='dashboard/dashboard.html'">Dashboard</button>
+        <button onclick="window.location.href='quests.html'">Quests</button>
+        <button onclick="deslogar()">Sair</button>
+      </div>
+    </nav>
   </header>
 
   <main>
-        <section class="wrap">
-            <div class="box quest-box">
+    <section class="wrap">
+      <div class="box quest-box">
 
-                <div class="journal-header">
-                    <div class="journal-left">
-                        <img src="assets/quest.jpg" class="journal-icon" alt="Ícone de quest">
-                        <div class="journal-titles">
-                            <h1>Registro de Missões</h1>
-                            <div class="muted">Livro de Quests — Tales of Azeroth</div>
-                        </div>
-                    </div>
-                    <div class="journal-right">
-                        <div class="journal-stats muted">Missões: <span id="journal-count">0</span></div>
-                    </div>
-                </div>
-
-                <div class="quests-grid">
-
-                    <div class="quests-left">
-                        <h2>Quests</h2>
-                        <p class="muted">Adicione tarefas e marque quando forem concluídas.</p>
-
-                        <div class="progress-wrap">
-                            <div class="progress">
-                                <div id="progress-fill" class="progress-fill"></div>
-                            </div>
-
-                            <div id="progress-text" class="muted progress-text">0%</div>
-                        </div>
-
-                        <ul id="quest-list" class="quest-list"></ul>
-                    </div>
-
-                    <aside class="quests-right">
-                        <div class="form-box">
-                            <h3>Nova Quest</h3>
-                            <div class="quest-controls">
-                                <div class="qc-fields">
-                                    <input id="quest-title" class="quest-input" placeholder="Título da quest">
-                                    <input id="quest-desc" class="quest-input" placeholder="Descrição da quest">
-                                </div>
-
-                                <div class="quest-actions">
-                                    <button id="add-quest" class="primary">Adicionar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </aside>
-
-                </div>
-
+        <div class="journal-header">
+          <div class="journal-left">
+            <img src="assets/quest.jpg" class="journal-icon" alt="Ícone de quest">
+            <div class="journal-titles">
+              <h1>Registro de Missões</h1>
+              <div class="muted">Livro de Quests — Tales of Azeroth</div>
             </div>
-        </section>
+          </div>
+          <div class="journal-right">
+            <div class="journal-stats muted">Missões: <span id="journal-count">0</span></div>
+          </div>
+        </div>
+
+        <div class="quests-grid">
+
+          <div class="quests-left">
+            <h2>Quests</h2>
+            <p class="muted">Adicione tarefas e marque quando forem concluídas.</p>
+
+            <div class="progress-wrap">
+              <div class="progress">
+                <div id="progress-fill" class="progress-fill"></div>
+              </div>
+
+              <div id="progress-text" class="muted progress-text">0%</div>
+            </div>
+
+            <ul id="quest-list" class="quest-list"></ul>
+          </div>
+
+          <aside class="quests-right">
+            <div class="form-box">
+              <h3>Nova Quest</h3>
+              <div class="quest-controls">
+                <div class="qc-fields">
+                  <input id="quest-title" class="quest-input" placeholder="Título da quest">
+                  <input id="quest-desc" class="quest-input" placeholder="Descrição da quest">
+                </div>
+
+                <div class="quest-actions">
+                  <button id="add-quest" class="primary">Adicionar</button>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+        </div>
+
+      </div>
+    </section>
   </main>
 
   <footer>
@@ -91,13 +91,25 @@
   </footer>
 
   <script>
-    function  deslogar(){
-    sessionStorage.clear()
-    window.location.href='index.html'
-  }
-    document.addEventListener('DOMContentLoaded', function () {
+    let userId = sessionStorage.ID_USUARIO
+    function VerificarLogado() {
+      if (!userId) {
+        const desejaEntrar = confirm(
+          'Você precisa estar logado para responder ao formulário. Deseja entrar agora?'
+        );
 
-      let userId = sessionStorage.ID_USUARIO;
+        if (desejaEntrar) {
+          window.location.href = 'cadastro/login.html';
+        } else {
+          window.location.href = 'index.html';
+        }
+      }
+    }
+    function deslogar() {
+      sessionStorage.clear()
+      window.location.href = 'index.html'
+    }
+    document.addEventListener('DOMContentLoaded', function () {
       let storageKey = 'quests_' + userId;
 
       let titleInput = document.getElementById('quest-title');
@@ -222,4 +234,5 @@
     });
   </script>
 </body>
+
 </html>
