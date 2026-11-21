@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quests — Tales of Azeroth</title>
+  <link rel="stylesheet" href="css/site.css">
+</head>
+
+<body>
+
+    <header>
+      <nav class="wrap">
+        <a class="logo" href="#inicio"><img width=100px src="assets/logo.png"></a>
+        <div class="links">
+          <a href="index.html">Pagina Inicial</a>
+          <a href="jornada.html">Minha jornada</a>
+          <a href="historia.html">Historia</a>
+          <a href="conteudo.html">Conteúdo</a>
+          <a href="classes.html">Classes</a>
+        </div>
+        <div class="actions">
+          <button class="primary" onclick="window.location.href='dashboard/panorama.html'">Dashboard</button>
+          <button onclick="deslogar()">Sair</button>
+        </div>
+      </nav>
+
+  </header>
+
+  <main>
+        <section class="wrap">
+            <div class="box quest-box">
+
+                <div class="journal-header">
+                    <div class="journal-left">
+                        <img src="assets/quest.jfif" class="journal-icon" alt="Ícone de quest">
+                        <div class="journal-titles">
+                            <h1>Registro de Missões</h1>
+                            <div class="muted">Livro de Quests — Tales of Azeroth</div>
+                        </div>
+                    </div>
+                    <div class="journal-right">
+                        <div class="journal-stats muted">Missões: <span id="journal-count">0</span></div>
+                    </div>
+                </div>
+
+                <div class="quests-grid">
+
+                    <div class="quests-left">
+                        <h2>Quests</h2>
+                        <p class="muted">Adicione tarefas e marque quando forem concluídas.</p>
+
+                        <div class="progress-wrap">
+                            <div class="progress">
+                                <div id="progress-fill" class="progress-fill"></div>
+                            </div>
+
+                            <div id="progress-text" class="muted progress-text">0%</div>
+                        </div>
+
+                        <ul id="quest-list" class="quest-list"></ul>
+                    </div>
+
+                    <aside class="quests-right">
+                        <div class="form-box">
+                            <h3>Nova Quest</h3>
+                            <div class="quest-controls">
+                                <div class="qc-fields">
+                                    <input id="quest-title" class="quest-input" placeholder="Título da quest">
+                                    <input id="quest-desc" class="quest-input" placeholder="Descrição da quest">
+                                </div>
+
+                                <div class="quest-actions">
+                                    <button id="add-quest" class="primary">Adicionar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+
+                </div>
+
+            </div>
+        </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <span>Tales of Azeroth — Quests</span>
+      <span>Projeto acadêmico independente.</span>
+    </div>
+  </footer>
+
+  <script>
+    function  deslogar(){
+    sessionStorage.clear()
+    window.location.href='index.html'
+  }
+    document.addEventListener('DOMContentLoaded', function () {
+
+      let userId = sessionStorage.ID_USUARIO;
+      let storageKey = 'quests_' + userId;
+
+      let titleInput = document.getElementById('quest-title');
+      let descInput = document.getElementById('quest-desc');
+      let listEl = document.getElementById('quest-list');
+      let progressFill = document.getElementById('progress-fill');
+      let progressText = document.getElementById('progress-text');
+
+      let quests = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+      function salvar() {
+        localStorage.setItem(storageKey, JSON.stringify(quests));
+      }
+
+      function atualizarProgresso() {
+        let total = quests.length;
+        let concluidas = quests.filter(q => q.done).length;
+
+        let porcentagem = total === 0 ? 0 : Math.round(concluidas / total * 100);
+
+        progressFill.style.width = porcentagem + '%';
+        progressText.innerText = porcentagem + '%';
+      }
+
+      function renderizar() {
+        listEl.innerHTML = '';
+
+        quests.forEach(function (q, i) {
+
+          let li = document.createElement('li');
+          li.className = 'quest-item';
+          if (q.done) li.classList.add('done');
+
+          // Checkbox
+          let checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.checked = q.done;
+
+          checkbox.addEventListener('change', function () {
+            q.done = checkbox.checked;
+            salvar();
+            renderizar();
+          });
+
+          li.appendChild(checkbox);
+
+          // Título e descrição
+          let label = document.createElement('label');
+          label.style.marginLeft = '10px';
+
+          let titulo = document.createElement('strong');
+          titulo.innerText = q.title;
+
+          let descricao = document.createElement('div');
+          descricao.className = 'quest-desc';
+          descricao.innerText = q.desc;
+
+          label.appendChild(titulo);
+          label.appendChild(descricao);
+
+          // permitir clicar no texto para alternar a checkbox
+          label.addEventListener('click', function (e) {
+            // não interfira se o clique for em um input já existente
+            if (e.target.tagName.toLowerCase() !== 'input') {
+              checkbox.checked = !checkbox.checked;
+              checkbox.dispatchEvent(new Event('change'));
+            }
+          });
+
+          li.appendChild(label);
+
+          // Botão excluir
+          let excluir = document.createElement('button');
+          excluir.innerText = 'Excluir';
+          excluir.className = 'btn';
+
+          excluir.addEventListener('click', function () {
+            quests.splice(i, 1);
+            salvar();
+            renderizar();
+          });
+
+          li.appendChild(excluir);
+          listEl.appendChild(li);
+        });
+
+        // atualizar contador no cabeçalho do jornal
+        let journalCountEl = document.getElementById('journal-count');
+        if (journalCountEl) journalCountEl.innerText = quests.length;
+
+        atualizarProgresso();
+      }
+
+      function adicionarQuest() {
+        let titulo = titleInput.value.trim();
+        let descricao = descInput.value.trim();
+
+        if (!titulo) {
+          titleInput.focus();
+          return;
+        }
+
+        quests.push({
+          title: titulo,
+          desc: descricao,
+          done: false
+        });
+
+        titleInput.value = '';
+        descInput.value = '';
+
+        salvar();
+        renderizar();
+      }
+
+      // Eventos
+      document.getElementById('add-quest').addEventListener('click', adicionarQuest);
+
+      titleInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') adicionarQuest();
+      });
+
+      renderizar();
+    });
+
+  </script>
+
+</body>
+
+</html>
