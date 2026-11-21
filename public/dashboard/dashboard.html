@@ -10,6 +10,24 @@
   <script src="dashboard.js" defer></script>
 </head>
 <body>
+  <header id="Header">
+    <nav class="wrap">
+      <a class="logo" href="../index.html"><img width="100" src="../assets/logo.png" alt="Tales of Azeroth"></a>
+      <div class="links">
+        <a href="../index.html">Pagina Inicial</a>
+        <a href="../jornada.html">Minha jornada</a>
+        <a href="../historia.html">Historia</a>
+        <a href="../conteudo.html">Conteúdo</a>
+        <a href="../classes.html">Classes</a>
+      </div>
+      <div class="actions">
+        <button class="primary" onclick="window.location.href='dashboard.html'">Dashboard</button>
+        <button onclick="window.location.href='../quests.html'">Quests</button>
+        <button onclick="deslogar()">Sair</button>
+      </div>
+    </nav>
+  </header>
+
   <main class="dashboard">
     <header class="topbar">
       <div class="brand-mark" aria-hidden="true">✦</div>
@@ -72,5 +90,12 @@
     </section>
     <footer class="footer"><span>✦ FOR THE ALLIANCE · FOR THE HORDE ✦</span><span>TALES OF AZEROTH</span></footer>
   </main>
+
+  <script>
+    function deslogar() {
+      sessionStorage.clear();
+      window.location.href = '../index.html';
+    }
+  </script>
 </body>
 </html>
