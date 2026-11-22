@@ -7,11 +7,9 @@
   <title>Tales of Azeroth | Dashboard</title>
   <link rel="stylesheet" href="../css/dashboard.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="sample-data.js"></script>
-  <script src="dashboard.js" defer></script>
 </head>
 
-<body onload = "VerificarLogado()">
+<body>
   <header id="Header">
     <nav class="wrap">
       <a class="logo" href="../index.html"><img width="100" src="../assets/logo.png" alt="Tales of Azeroth"></a>
@@ -108,24 +106,186 @@
   </main>
 
   <script>
-    function VerificarLogado() {
-      let userId = sessionStorage.ID_USUARIO;
-      if (!userId) {
-        const desejaEntrar = confirm(
-          'Você precisa estar logado para responder ao formulário. Deseja entrar agora?'
-        );
+    var dourado = '#d5b36a';
+    var azul = '#559fd0';
+    var vermelho = '#b76859';
+    var verde = '#68aaa1';
+    var cinza = '#757575';
 
-        if (desejaEntrar) {
-          window.location.href = 'cadastro/login.html';
-        } else {
-          window.location.href = 'index.html';
-        }
-      }
+    // cor de cada fatia pelo nome da alternativa
+    var cores = {
+      'Aliança': azul, 'Horda': vermelho,
+      'DPS': vermelho, 'Tank': azul, 'Healer': verde,
+      'Retail': dourado, 'Classic': azul, 'Ambas': cinza
+    };
+
+    Chart.defaults.color = '#aeb9c8';
+    Chart.defaults.font.family = 'Inter, Arial, sans-serif';
+    Chart.defaults.font.size = 10;
+
+    function criarTooltip(funcaoLabel) {
+      return {
+        backgroundColor: '#07111d',
+        borderColor: 'rgba(213,179,106,.4)',
+        borderWidth: 1,
+        titleColor: '#f1d28a',
+        bodyColor: '#e6e0d4',
+        padding: 10,
+        callbacks: { label: funcaoLabel }
+      };
     }
+
+    function buscar(url, funcao) {
+      fetch(url)
+        .then(function (resposta) { return resposta.json(); })
+        .then(funcao);
+    }
+
+    function setTexto(id, valor) {
+      document.getElementById(id).textContent = valor;
+    }
+
+    function setBarra(id, percentual) {
+      document.getElementById(id).style.width = percentual + '%';
+    }
+
+
+    buscar('/dashboard/participacao', function (dados) {
+      var linha = dados[0];
+      var percentual = Math.round(Number(linha.porcentagem_participacao));
+      setTexto('responses', linha.formularios_respondidos);
+      setTexto('responseRate', percentual + '%');
+      setBarra('responseBar', percentual);
+    });
+
+    buscar('/dashboard/conteudo', function (dados) {
+      var linha = dados[0];
+      var percentual = Math.round(Number(linha.porcentagem));
+      setTexto('topContent', linha.conteudo_preferido);
+      setTexto('topContentRate', percentual + '%');
+      setBarra('contentBar', percentual);
+    });
+
+    buscar('/dashboard/guilda', function (dados) {
+      var linha = dados[0];
+      var percentual = Math.round(Number(linha.porcentagem_guilda));
+      setTexto('guildRate', percentual + '%');
+      setTexto('guildCount', linha.jogadores_guilda);
+      setBarra('guildBar', percentual);
+    });
+
+    buscar('/dashboard/veteranos', function (dados) {
+      var linha = dados[0];
+      var percentual = Math.round(Number(linha.porcentagem_veteranos));
+      setTexto('veteranRate', percentual + '%');
+      setBarra('veteranBar', percentual);
+    });
+
+
+    buscar('/dashboard/classes', function (dados) {
+      var nomes = [];
+      var votos = [];
+      var total = 0;
+
+      for (var i = 0; i < dados.length; i++) {
+        nomes.push(dados[i].classe);
+        votos.push(Number(dados[i].quantidade));
+        total += Number(dados[i].quantidade);
+      }
+
+      setTexto('classTotal', total + ' votos');
+
+      new Chart(document.getElementById('classesChart'), {
+        type: 'bar',
+        data: {
+          labels: nomes,
+          datasets: [{
+            data: votos,
+            backgroundColor: 'rgba(190,151,75,.8)',
+            borderColor: '#d5b36a',
+            borderWidth: 1,
+            borderRadius: 3,
+            maxBarThickness: 24
+          }]
+        },
+        options: {
+          maintainAspectRatio: false,
+          indexAxis: 'y',
+          plugins: {
+            legend: { display: false },
+            tooltip: criarTooltip(function (c) { return ' ' + c.raw + ' votos'; })
+          },
+          scales: {
+            x: { beginAtZero: true, grid: { color: 'rgba(145,165,185,.12)' }, ticks: { precision: 0 } },
+            y: { grid: { display: false }, ticks: { color: '#d1c5ad' } }
+          }
+        }
+      });
+    });
+
+    function criarPizza(url, canvasId, campoNome, rodapeId) {
+      buscar(url, function (dados) {
+        var nomes = [];
+        var valores = [];
+        var cor = [];
+        var total = 0;
+        var rodape = '';
+
+        for (var i = 0; i < dados.length; i++) {
+          nomes.push(dados[i][campoNome]);
+          valores.push(Number(dados[i].quantidade));
+          cor.push(cores[dados[i][campoNome]]);
+          total += Number(dados[i].quantidade);
+        }
+
+        for (var j = 0; j < dados.length; j++) {
+          if (j > 0) {
+            rodape += '  /  ';
+          }
+          rodape += nomes[j] + ' ' + Math.round(Number(dados[j].porcentagem)) + '%';
+        }
+
+        setTexto(rodapeId, total + ' respostas · ' + rodape);
+
+        new Chart(document.getElementById(canvasId), {
+          type: 'doughnut',
+          data: {
+            labels: nomes,
+            datasets: [{
+              data: valores,
+              backgroundColor: cor,
+              borderColor: '#101b2b',
+              borderWidth: 3,
+              hoverOffset: 5
+            }]
+          },
+          options: {
+            maintainAspectRatio: false,
+            cutout: '64%',
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: { color: '#c4cbd4', padding: 12, usePointStyle: true, pointStyle: 'circle', boxWidth: 7 }
+              },
+              tooltip: criarTooltip(function (c) {
+                return ' ' + c.label + ': ' + c.raw + ' (' + Math.round(c.raw / total * 100) + '%)';
+              })
+            }
+          }
+        });
+      });
+    }
+
+    criarPizza('/dashboard/faccao', 'factionChart', 'faccao', 'factionFoot');
+    criarPizza('/dashboard/role', 'roleChart', 'funcao', 'roleFoot');
+    criarPizza('/dashboard/versao', 'versionChart', 'versao', 'versionFoot');
+
+
     function deslogar() {
       sessionStorage.clear();
       window.location.href = '../index.html';
     }
+
   </script>
 </body>
 

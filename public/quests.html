@@ -66,12 +66,12 @@
               <h3>Nova Quest</h3>
               <div class="quest-controls">
                 <div class="qc-fields">
-                  <input id="quest-title" class="quest-input" placeholder="Título da quest">
-                  <input id="quest-desc" class="quest-input" placeholder="Descrição da quest">
+                  <input id="ipt_titulo" class="quest-input" placeholder="Título da quest">
+                  <input id="ipt_quest" class="quest-input" placeholder="Descrição da quest">
                 </div>
 
                 <div class="quest-actions">
-                  <button id="add-quest" class="primary">Adicionar</button>
+                  <button id="btn_adicionar" onclick = "adicionarQuest()"class="primary">Adicionar</button>
                 </div>
               </div>
             </div>
@@ -91,10 +91,11 @@
   </footer>
 
   <script>
-    let userId = sessionStorage.ID_USUARIO
+    var idUsuario = sessionStorage.ID_USUARIO;
+
     function VerificarLogado() {
-      if (!userId) {
-        const desejaEntrar = confirm(
+      if (!idUsuario) {
+        var desejaEntrar = confirm(
           'Você precisa estar logado para responder ao formulário. Deseja entrar agora?'
         );
 
@@ -103,135 +104,139 @@
         } else {
           window.location.href = 'index.html';
         }
+      } else {
+        listarQuests();
       }
     }
+
     function deslogar() {
-      sessionStorage.clear()
-      window.location.href = 'index.html'
+      sessionStorage.clear();
+      window.location.href = 'index.html';
     }
-    document.addEventListener('DOMContentLoaded', function () {
-      let storageKey = 'quests_' + userId;
 
-      let titleInput = document.getElementById('quest-title');
-      let descInput = document.getElementById('quest-desc');
-      let listEl = document.getElementById('quest-list');
-      let progressFill = document.getElementById('progress-fill');
-      let progressText = document.getElementById('progress-text');
 
-      let quests = JSON.parse(localStorage.getItem(storageKey)) || [];
-
-      function salvar() {
-        localStorage.setItem(storageKey, JSON.stringify(quests));
-      }
-
-      function atualizarProgresso() {
-        let total = quests.length;
-        let concluidas = quests.filter(q => q.done).length;
-
-        let porcentagem = total === 0 ? 0 : Math.round(concluidas / total * 100);
-
-        progressFill.style.width = porcentagem + '%';
-        progressText.innerText = porcentagem + '%';
-      }
-
-      function renderizar() {
-        listEl.innerHTML = '';
-
-        quests.forEach(function (q, i) {
-
-          let li = document.createElement('li');
-          li.className = 'quest-item';
-          if (q.done) li.classList.add('done');
-
-          // Checkbox
-          let checkbox = document.createElement('input');
-          checkbox.type = 'checkbox';
-          checkbox.checked = q.done;
-
-          checkbox.addEventListener('change', function () {
-            q.done = checkbox.checked;
-            salvar();
-            renderizar();
-          });
-
-          li.appendChild(checkbox);
-
-          // Título e descrição
-          let label = document.createElement('label');
-
-          let titulo = document.createElement('strong');
-          titulo.innerText = q.title;
-
-          let descricao = document.createElement('div');
-          descricao.className = 'quest-desc';
-          descricao.innerText = q.desc;
-
-          label.appendChild(titulo);
-          label.appendChild(descricao);
-
-          // permitir clicar no texto para alternar a checkbox
-          label.addEventListener('click', function (e) {
-            // não interfira se o clique for em um input já existente
-            if (e.target.tagName.toLowerCase() !== 'input') {
-              checkbox.checked = !checkbox.checked;
-              checkbox.dispatchEvent(new Event('change'));
-            }
-          });
-
-          li.appendChild(label);
-
-          // Botão excluir
-          let excluir = document.createElement('button');
-          excluir.innerText = 'Excluir';
-          excluir.className = 'btn';
-
-          excluir.addEventListener('click', function () {
-            quests.splice(i, 1);
-            salvar();
-            renderizar();
-          });
-
-          li.appendChild(excluir);
-          listEl.appendChild(li);
+    function listarQuests() {
+      fetch('/quests/listar/' + idUsuario)
+        .then(function (resposta) {
+          return resposta.json();
+        })
+        .then(function (quests) {
+          mostrarQuests(quests);
         });
+    }
 
-        // atualizar contador no cabeçalho do jornal
-        let journalCountEl = document.getElementById('journal-count');
-        if (journalCountEl) journalCountEl.innerText = quests.length;
+    function mostrarQuests(quests) {
+      var lista = document.getElementById('quest-list');
+      var concluidas = 0;
 
-        atualizarProgresso();
-      }
+      lista.innerHTML = '';
 
-      function adicionarQuest() {
-        let titulo = titleInput.value.trim();
-        let descricao = descInput.value.trim();
-
-        if (!titulo) {
-          titleInput.focus();
-          return;
+      for (var i = 0; i < quests.length; i++) {
+        if (quests[i].concluida == 1) {
+          concluidas++;
         }
-
-        quests.push({
-          title: titulo,
-          desc: descricao,
-          done: false
-        });
-
-        titleInput.value = '';
-        descInput.value = '';
-
-        salvar();
-        renderizar();
+        lista.appendChild(criarItem(quests[i]));
       }
 
-      // Eventos
-      document.getElementById('add-quest').addEventListener('click', adicionarQuest);
+      var porcentagem = 0;
+      if (quests.length > 0) {
+        porcentagem = Math.round(concluidas / quests.length * 100);
+      }
 
-      titleInput.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') adicionarQuest();
+      document.getElementById('journal-count').innerText = quests.length;
+      document.getElementById('progress-fill').style.width = porcentagem + '%';
+      document.getElementById('progress-text').innerText = porcentagem + '%';
+    }
+
+    function criarItem(quest) {
+      var li = document.createElement('li');
+      li.className = 'quest-item';
+      if (quest.concluida == 1) {
+        li.classList.add('done');
+      }
+
+      var checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = quest.concluida == 1;
+      checkbox.onchange = function () {
+        alterarQuest(quest);
+      };
+
+      var label = document.createElement('label');
+      label.onclick = function () {
+        alterarQuest(quest);
+      };
+
+      var titulo = document.createElement('strong');
+      titulo.innerText = quest.titulo;
+
+      var descricao = document.createElement('div');
+      descricao.className = 'ipt_quest';
+      descricao.innerText = quest.descricao;
+
+      label.appendChild(titulo);
+      label.appendChild(descricao);
+
+      var excluir = document.createElement('button');
+      excluir.innerText = 'Excluir';
+      excluir.className = 'btn';
+      excluir.onclick = function () {
+        excluirQuest(quest.idQuest);
+      };
+
+      li.appendChild(checkbox);
+      li.appendChild(label);
+      li.appendChild(excluir);
+
+      return li;
+    }
+
+    function adicionarQuest() {
+      var titulo = document.getElementById('ipt_titulo').value;
+      var descricao = document.getElementById('ipt_quest').value;
+      if(!titulo){
+        ipt_titulo.focus()
+        return
+      }
+      fetch('/quests/cadastrar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tituloServer: titulo,
+          descricaoServer: descricao,
+          idUsuarioServer: idUsuario
+        })
+      }).then(function () {
+        document.getElementById('ipt_titulo').value = '';
+        document.getElementById('ipt_quest').value = '';
+        listarQuests();
       });
-      renderizar();
-    });
+    }
+
+
+    function alterarQuest(quest) {
+      var novoValor = 1;
+      if (quest.concluida == 1) {
+        novoValor = 0;
+      }
+
+      fetch('/quests/atualizar/' + quest.idQuest, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ concluidaServer: novoValor })
+      }).then(function () {
+        listarQuests();
+      });
+    }
+
+    function excluirQuest(idQuest) {
+      fetch('/quests/deletar/' + idQuest, {
+        method: 'DELETE'
+      }).then(function () {
+        listarQuests();
+      });
+    }
+
   </script>
 </body>
 
